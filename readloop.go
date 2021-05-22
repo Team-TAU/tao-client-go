@@ -78,5 +78,32 @@ func (c *Client) handleMessage(msg []byte) {
 			}
 			c.subscriptionCallback(subMsg)
 		}
+	case HYPEBEGIN:
+		if c.hypeTrainBeginCallback != nil {
+			hypeMsg := new(HypeTrainBeginMsg)
+			err = json.Unmarshal(msg, hypeMsg)
+			if err != nil {
+				return
+			}
+			c.hypeTrainBeginCallback(hypeMsg)
+		}
+	case HYPEPROGRESS:
+		if c.hypeTrainProgressCallback != nil {
+			hypeMsg := new(HypeTrainProgressMsg)
+			err = json.Unmarshal(msg, hypeMsg)
+			if err != nil {
+				return
+			}
+			c.hypeTrainProgressCallback(hypeMsg)
+		}
+	case HYPEEND:
+		if c.hypeTrainEndedCallback != nil {
+			hypeMsg := new(HypeTrainEndedMsg)
+			err = json.Unmarshal(msg, hypeMsg)
+			if err != nil {
+				return
+			}
+			c.hypeTrainEndedCallback(hypeMsg)
+		}
 	}
 }
