@@ -1,0 +1,66 @@
+---
+include:
+  - template: Security/SAST.gitlab-ci.yml
+
+stages:
+  - vulnerability
+  - test
+  - lint
+
+snyk-scan:
+  stage: vulnerability
+  image: node:14.2
+  before_script:
+    - apt install -y wget tar
+    - wget -q https://dl.google.com/go/go1.16.3.linux-amd64.tar.gz -O /tmp/go1.16.3.linux-amd64.tar.gz
+    - tar -C /usr/local -xzf /tmp/go1.16.3.linux-amd64.tar.gz
+  script:
+    - export PATH=$PATH:/usr/local/go/bin
+    - npm install -g snyk
+    - snyk auth $SNYK_TOKEN
+    - snyk test
+
+unit-test-go-1.16:
+  stage: test
+  image: golang:1.16
+  before_script:
+    - go mod download
+  script:
+    - go test -short $(go list ./... | grep -v /vendor/)
+  except:
+    - schedules
+
+coverage-report:
+  stage: test
+  image: golang:1.16
+  before_script:
+    - go mod download
+  script:
+    - export PKG_LIST=$(go list ./... | grep -v /vendor/)
+    - mkdir cover
+    - for package in ${PKG_LIST}; do
+      go test -covermode=count -coverprofile "cover/${package##*/}.cov" "$package" ;
+      done
+    - "echo 'mode: count' > coverage.cov"
+    - tail -q -n +2 cover/*.cov >> coverage.cov
+    - go tool cover -func=coverage.cov
+    - go tool cover -html=coverage.cov -o index.html
+  artifacts:
+    paths:
+      - index.html
+
+lint:
+  stage: lint
+  image: golang:1.16
+  before_script:
+    - go mod download
+    - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.37.1
+  script:
+    - golangci-lint run
+    - golangci-lint run --out-format junit-xml > junit.xml
+  artifacts:
+    reports:
+      junit:
+        - junit.xml
+  except:
+    - schedules
