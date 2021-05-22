@@ -10,11 +10,11 @@ import (
 func TestHandleMessage(t *testing.T) {
 	client := Client{}
 	type testData struct {
-		msg                             string
-		testCase                        string
-		expectFollowCallback            bool
-		expectStreamUpdateCallback      bool
-		expectPointsRedemptionCallback  bool
+		msg                        string
+		testCase                   string
+		expectFollowCallback       bool
+		expectStreamUpdateCallback bool
+		//expectPointsRedemptionCallback  bool
 		expectCheerCallback             bool
 		expectRaidCallback              bool
 		expectSubscriptionCallback      bool
