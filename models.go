@@ -87,7 +87,11 @@ type SubscriptionMsg struct {
 				Time            string `json:"time"`
 				SubMessage      struct {
 					Message string `json:"message"`
-					Emotes  string `json:"emotes"`
+					Emotes  []struct {
+						Start int `json:"start"`
+						End   int `json:"end"`
+						ID    int `json:"id"`
+					} `json:"emotes"`
 				} `json:"sub_message"`
 			} `json:"message"`
 		} `json:"data"`
