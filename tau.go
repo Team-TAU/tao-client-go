@@ -14,12 +14,16 @@ type Client struct {
 	writeLock *sync.Mutex
 
 	// callback functions
-	rawCallback          RawCallback
-	followCallback       FollowCallback
-	streamUpdateCallback StreamUpdateCallback
-	cheerCallback        CheerCallback
-	raidCallback         RaidCallback
-	subscriptionCallback SubscriptionCallback
+	rawCallback               RawCallback
+	errorCallback             ErrorCallback
+	followCallback            FollowCallback
+	streamUpdateCallback      StreamUpdateCallback
+	cheerCallback             CheerCallback
+	raidCallback              RaidCallback
+	subscriptionCallback      SubscriptionCallback
+	hypeTrainBeginCallback    HypeTrainBeginCallback
+	hypeTrainProgressCallback HypeTrainProgressCallback
+	hypeTrainEndedCallback    HypeTrainEndCallback
 }
 
 // NewClient allows you to get a new client that is connected to TAU

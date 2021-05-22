@@ -97,3 +97,82 @@ type SubscriptionMsg struct {
 		} `json:"data"`
 	}
 }
+
+type HypeTrainBeginMsg struct {
+	*Event
+	EventData struct {
+		BroadcasterID    string `json:"broadcaster_user_id"`
+		BroadcasterName  string `json:"broadcaster_user_name"`
+		BroadcasterLogin string `json:"broadcaster_user_login"`
+		Total            int    `json:"total"`
+		Progress         int    `json:"progress"`
+		Goal             int    `json:"goal"`
+		StartedAt        string `json:"started_at"`
+		ExpiresAt        string `json:"expires_at"`
+		TopContributions []struct {
+			UserID    string `json:"user_id"`
+			UserLogin string `json:"user_login"`
+			UserName  string `json:"user_name"`
+			Type      string `json:"type"`
+			Total     int    `json:"total"`
+		} `json:"top_contributions"`
+		LastContribution struct {
+			UserID    string `json:"user_id"`
+			UserLogin string `json:"user_login"`
+			UserName  string `json:"user_name"`
+			Type      string `json:"type"`
+			Total     int    `json:"total"`
+		} `json:"last_contribution"`
+	} `json:"event_data"`
+}
+
+type HypeTrainProgressMsg struct {
+	*Event
+	EventData struct {
+		BroadcasterID    string `json:"broadcaster_user_id"`
+		BroadcasterName  string `json:"broadcaster_user_name"`
+		BroadcasterLogin string `json:"broadcaster_user_login"`
+		Level            int    `json:"level"`
+		Total            int    `json:"total"`
+		Progress         int    `json:"progress"`
+		Goal             int    `json:"goal"`
+		StartedAt        string `json:"started_at"`
+		ExpiresAt        string `json:"expires_at"`
+		TopContributions []struct {
+			UserID    string `json:"user_id"`
+			UserLogin string `json:"user_login"`
+			UserName  string `json:"user_name"`
+			Type      string `json:"type"`
+			Total     int    `json:"total"`
+		} `json:"top_contributions"`
+		LastContribution struct {
+			UserID    string `json:"user_id"`
+			UserLogin string `json:"user_login"`
+			UserName  string `json:"user_name"`
+			Type      string `json:"type"`
+			Total     int    `json:"total"`
+		} `json:"last_contribution"`
+	} `json:"event_data"`
+}
+
+type HypeTrainEndedMsg struct {
+	*Event
+	EventData struct {
+		BroadcasterID    string `json:"broadcaster_user_id"`
+		BroadcasterName  string `json:"broadcaster_user_name"`
+		BroadcasterLogin string `json:"broadcaster_user_login"`
+		Level            int    `json:"level"`
+		Total            int    `json:"total"`
+		Progress         int    `json:"progress"`
+		StartedAt        string `json:"started_at"`
+		EndedAt          string `json:"ended_at"`
+		CooldownEndsAt   string `json:"cooldown_ends_at"`
+		TopContributions []struct {
+			UserID    string `json:"user_id"`
+			UserLogin string `json:"user_login"`
+			UserName  string `json:"user_name"`
+			Type      string `json:"type"`
+			Total     int    `json:"total"`
+		} `json:"top_contributions"`
+	} `json:"event_data"`
+}

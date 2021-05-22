@@ -2,21 +2,17 @@ package go_tau
 
 import (
 	"encoding/json"
-	"github.com/gorilla/websocket"
-	"os"
 )
 
 func (c *Client) readLoop() {
 	for {
 		_, message, err := c.conn.ReadMessage()
 		if err != nil {
-			closeErr, ok := err.(*websocket.CloseError)
-			if ok {
-				if closeErr.Code == websocket.CloseNormalClosure || closeErr.Code == websocket.CloseGoingAway {
-					os.Exit(0)
-				}
+			if c.errorCallback != nil {
+				c.errorCallback(err)
+			} else {
+				panic(err.Error())
 			}
-			panic(err.Error())
 		}
 
 		c.handleMessage(message)
