@@ -6,6 +6,7 @@ stages:
   - vulnerability
   - test
   - lint
+  - build-example
 
 snyk-scan:
   stage: vulnerability
@@ -62,5 +63,15 @@ lint:
     reports:
       junit:
         - junit.xml
+  except:
+    - schedules
+
+build-raw-receive-example:
+  stage: build-example
+  image: golang:1.16
+  before_script:
+    - go mod download
+  script:
+    - go build ./examples/raw-receive/main.go
   except:
     - schedules
