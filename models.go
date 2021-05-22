@@ -7,13 +7,8 @@ type Event struct {
 	EventID     string `json:"event_id"`
 	EventType   string `json:"event_type"`
 	EventSource string `json:"event_source"`
-	Created     string `json:"created"`
+	Created     Time   `json:"created"`
 	Origin      string `json:"origin"`
-}
-
-func (e *Event) CreatedAsTime() (time.Time, error) {
-	// 2021-05-22T05:20:06.120452+00:00
-	return time.Parse("2006-01-02T15:04:05.999999999-07:00", e.Created)
 }
 
 type FollowMsg struct {
@@ -38,7 +33,7 @@ type StreamUpdateMsg struct {
 		CategoryName     string `json:"category_name"`
 		BroadcasterID    string `json:"broadcaster_user_id"`
 		BroadcasterName  string `json:"broadcaster_user_name"`
-		BroadcasterLogin string `json:"broadcaster_login"`
+		BroadcasterLogin string `json:"broadcaster_user_login"`
 	} `json:"event_data"`
 }
 
@@ -75,24 +70,24 @@ type SubscriptionMsg struct {
 	EventData struct {
 		Type string `json:"type"`
 		Data struct {
-			Topic              string `json:"topic"`
-			SubPlan            string `json:"sub_plan"`
-			SubPlanName        string `json:"sub_plan_name"`
-			Months             int    `json:"months"`
-			CumulativeMonths   int    `json:"cumulative_months"`
-			Context            string `json:"context"`
-			IsGift             bool   `json:"is_gift"`
-			MultiMonthDuration int    `json:"multi_month_duration"`
-			StreakMonths       int    `json:"streak_months"`
-			Message            struct {
-				BenefitEndMonth int    `json:"benefit_end_month"`
-				UserName        string `json:"user_name"`
-				DisplayName     string `json:"display_name"`
-				ChannelName     string `json:"channel_name"`
-				UserID          string `json:"user_id"`
-				ChannelID       string `json:"channel_id"`
-				Time            string `json:"time"`
-				SubMessage      struct {
+			Topic   string `json:"topic"`
+			Message struct {
+				BenefitEndMonth    int       `json:"benefit_end_month"`
+				UserName           string    `json:"user_name"`
+				DisplayName        string    `json:"display_name"`
+				ChannelName        string    `json:"channel_name"`
+				UserID             string    `json:"user_id"`
+				ChannelID          string    `json:"channel_id"`
+				Time               time.Time `json:"time"`
+				SubPlan            string    `json:"sub_plan"`
+				SubPlanName        string    `json:"sub_plan_name"`
+				Months             int       `json:"months"`
+				CumulativeMonths   int       `json:"cumulative_months"`
+				Context            string    `json:"context"`
+				IsGift             bool      `json:"is_gift"`
+				MultiMonthDuration int       `json:"multi_month_duration"`
+				StreakMonths       int       `json:"streak_months"`
+				SubMessage         struct {
 					Message string `json:"message"`
 					Emotes  []struct {
 						Start int `json:"start"`
@@ -102,20 +97,20 @@ type SubscriptionMsg struct {
 				} `json:"sub_message"`
 			} `json:"message"`
 		} `json:"data"`
-	}
+	} `json:"event_data"`
 }
 
 type HypeTrainBeginMsg struct {
 	*Event
 	EventData struct {
-		BroadcasterID    string `json:"broadcaster_user_id"`
-		BroadcasterName  string `json:"broadcaster_user_name"`
-		BroadcasterLogin string `json:"broadcaster_user_login"`
-		Total            int    `json:"total"`
-		Progress         int    `json:"progress"`
-		Goal             int    `json:"goal"`
-		StartedAt        string `json:"started_at"`
-		ExpiresAt        string `json:"expires_at"`
+		BroadcasterID    string    `json:"broadcaster_user_id"`
+		BroadcasterName  string    `json:"broadcaster_user_name"`
+		BroadcasterLogin string    `json:"broadcaster_user_login"`
+		Total            int       `json:"total"`
+		Progress         int       `json:"progress"`
+		Goal             int       `json:"goal"`
+		StartedAt        time.Time `json:"started_at"`
+		ExpiresAt        time.Time `json:"expires_at"`
 		TopContributions []struct {
 			UserID    string `json:"user_id"`
 			UserLogin string `json:"user_login"`
@@ -131,34 +126,20 @@ type HypeTrainBeginMsg struct {
 			Total     int    `json:"total"`
 		} `json:"last_contribution"`
 	} `json:"event_data"`
-}
-
-// StartedAtAsTime returns a Time object for the started at (which isn't needed often hence why
-// it's not doing the conversion by default)
-func (h *HypeTrainBeginMsg) StartedAtAsTime() (time.Time, error) {
-	//2020-07-15T17:16:03.17106713Z
-	return time.Parse("2006-01-02T15:04:05.999999999Z", h.EventData.StartedAt)
-}
-
-// ExpiresAtAsTime returns a Time object for the started at (which isn't needed often hence why
-// it's not doing the conversion by default)
-func (h *HypeTrainBeginMsg) ExpiresAtAsTime() (time.Time, error) {
-	//2020-07-15T17:16:11.17106713Z
-	return time.Parse("2006-01-02T15:04:05.999999999Z", h.EventData.ExpiresAt)
 }
 
 type HypeTrainProgressMsg struct {
 	*Event
 	EventData struct {
-		BroadcasterID    string `json:"broadcaster_user_id"`
-		BroadcasterName  string `json:"broadcaster_user_name"`
-		BroadcasterLogin string `json:"broadcaster_user_login"`
-		Level            int    `json:"level"`
-		Total            int    `json:"total"`
-		Progress         int    `json:"progress"`
-		Goal             int    `json:"goal"`
-		StartedAt        string `json:"started_at"`
-		ExpiresAt        string `json:"expires_at"`
+		BroadcasterID    string    `json:"broadcaster_user_id"`
+		BroadcasterName  string    `json:"broadcaster_user_name"`
+		BroadcasterLogin string    `json:"broadcaster_user_login"`
+		Level            int       `json:"level"`
+		Total            int       `json:"total"`
+		Progress         int       `json:"progress"`
+		Goal             int       `json:"goal"`
+		StartedAt        time.Time `json:"started_at"`
+		ExpiresAt        time.Time `json:"expires_at"`
 		TopContributions []struct {
 			UserID    string `json:"user_id"`
 			UserLogin string `json:"user_login"`
@@ -176,32 +157,18 @@ type HypeTrainProgressMsg struct {
 	} `json:"event_data"`
 }
 
-// StartedAtAsTime returns a Time object for the started at (which isn't needed often hence why
-// it's not doing the conversion by default)
-func (h *HypeTrainProgressMsg) StartedAtAsTime() (time.Time, error) {
-	// 2020-07-15T17:16:03.17106713Z
-	return time.Parse("2006-01-02T15:04:05.999999999Z", h.EventData.StartedAt)
-}
-
-// ExpiresAtAsTime returns a Time object for the started at (which isn't needed often hence why
-// it's not doing the conversion by default)
-func (h *HypeTrainProgressMsg) ExpiresAtAsTime() (time.Time, error) {
-	// 2020-07-15T17:16:03.17106713Z
-	return time.Parse("2006-01-02T15:04:05.999999999Z", h.EventData.ExpiresAt)
-}
-
 type HypeTrainEndedMsg struct {
 	*Event
 	EventData struct {
-		BroadcasterID    string `json:"broadcaster_user_id"`
-		BroadcasterName  string `json:"broadcaster_user_name"`
-		BroadcasterLogin string `json:"broadcaster_user_login"`
-		Level            int    `json:"level"`
-		Total            int    `json:"total"`
-		Progress         int    `json:"progress"`
-		StartedAt        string `json:"started_at"`
-		EndedAt          string `json:"ended_at"`
-		CooldownEndsAt   string `json:"cooldown_ends_at"`
+		BroadcasterID    string    `json:"broadcaster_user_id"`
+		BroadcasterName  string    `json:"broadcaster_user_name"`
+		BroadcasterLogin string    `json:"broadcaster_user_login"`
+		Level            int       `json:"level"`
+		Total            int       `json:"total"`
+		Progress         int       `json:"progress"`
+		StartedAt        time.Time `json:"started_at"`
+		EndedAt          time.Time `json:"ended_at"`
+		CooldownEndsAt   time.Time `json:"cooldown_ends_at"`
 		TopContributions []struct {
 			UserID    string `json:"user_id"`
 			UserLogin string `json:"user_login"`
@@ -210,25 +177,4 @@ type HypeTrainEndedMsg struct {
 			Total     int    `json:"total"`
 		} `json:"top_contributions"`
 	} `json:"event_data"`
-}
-
-// StartedAtAsTime returns a Time object for the started at (which isn't needed often hence why
-// it's not doing the conversion by default)
-func (h *HypeTrainEndedMsg) StartedAtAsTime() (time.Time, error) {
-	// 2020-07-15T17:16:03.17106713Z
-	return time.Parse("2006-01-02T15:04:05.999999999Z", h.EventData.StartedAt)
-}
-
-// EndedAtAsTime returns a Time object for the started at (which isn't needed often hence why
-// it's not doing the conversion by default)
-func (h *HypeTrainEndedMsg) EndedAtAsTime() (time.Time, error) {
-	// 2020-07-15T17:16:03.17106713Z
-	return time.Parse("2006-01-02T15:04:05.999999999Z", h.EventData.EndedAt)
-}
-
-// CooldownEndsAtAsTime returns a Time object for the started at (which isn't needed often hence why
-// it's not doing the conversion by default)
-func (h *HypeTrainEndedMsg) CooldownEndsAtAsTime() (time.Time, error) {
-	// 2020-07-15T18:16:11.17106713Z
-	return time.Parse("2006-01-02T15:04:05.999999999Z", h.EventData.CooldownEndsAt)
 }
