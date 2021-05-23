@@ -1,7 +1,11 @@
 package go_tau
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
 	"sync"
 )
 import "github.com/gorilla/websocket"
@@ -63,4 +67,39 @@ func (c *Client) SendMessage(msg interface{}) error {
 	c.writeLock.Lock()
 	defer c.writeLock.Unlock()
 	return c.conn.WriteJSON(msg)
+}
+
+// GetAuthToken is used to get the auth token for a user to interact with TAU given a username and password.
+//Ideally this would be gathered from the UI and potentially stored in a config of some sort, but this option exists
+//in case that is not an option.
+func GetAuthToken(username, password, hostname string, port int, hasSSL bool) (string, error) {
+	protocol := "http"
+	if hasSSL {
+		protocol = "https"
+	}
+	url := fmt.Sprintf("%s://%s:%d/api-token-auth/", protocol, hostname, port)
+	body := fmt.Sprintf("{\"username\": \"%s\",\"password\": \"%s\"}", username, password)
+	resp, err := http.Post(url, "application/json", strings.NewReader(body))
+	if err != nil {
+		return "", err
+	}
+	if resp.StatusCode != http.StatusOK {
+		data, _ := ioutil.ReadAll(resp.Body)
+		return "", fmt.Errorf("expected 200 status code but got %d, response body %s", resp.StatusCode, string(data))
+	}
+
+	type tmp struct {
+		Token string `json:"token"`
+	}
+	data := new(tmp)
+	rawData, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	err = json.Unmarshal(rawData, data)
+	if err != nil {
+		return "", err
+	}
+
+	return data.Token, nil
 }
