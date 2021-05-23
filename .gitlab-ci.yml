@@ -75,3 +75,13 @@ build-raw-receive-example:
     - go build ./examples/raw-receive/main.go
   except:
     - schedules
+
+build-save-latests-example:
+  stage: build-example
+  image: golang:1.16
+  before_script:
+    - go mod download
+  script:
+    - go build ./examples/save-latests/main.go
+  except:
+    - schedules
