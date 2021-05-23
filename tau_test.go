@@ -16,7 +16,7 @@ func TestGetAuthToken_ValidRequest(t *testing.T) {
 		require.Equal(t, req.URL.String(), "/api-token-auth/")
 		// Send response to be tested
 		rw.WriteHeader(http.StatusOK)
-		rw.Write([]byte("{\"token\": \"baz\"}"))
+		_, _ = rw.Write([]byte("{\"token\": \"baz\"}"))
 	}))
 	defer server.Close()
 	url := server.URL
