@@ -1,6 +1,8 @@
 package go_tau
 
 const (
+	STREAMONLINE      = "stream-online"
+	STREAMOFFLINE     = "stream-offline"
 	FOLLOWEVENT       = "follow"
 	UPDATEEVENT       = "update"
 	CHEEREVENT        = "cheer"

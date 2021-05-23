@@ -47,7 +47,7 @@ type CheerMsg struct {
 		BroadcasterID    string `json:"broadcaster_user_id"`
 		BroadcasterName  string `json:"broadcaster_user_name"`
 		BroadcasterLogin string `json:"broadcaster_user_login"`
-		Bits             string `json:"bits"`
+		Bits             int    `json:"bits"`
 		Message          string `json:"message"`
 	} `json:"event_data"`
 }
@@ -61,7 +61,7 @@ type RaidMsg struct {
 		ToBroadcasterName    string `json:"to_broadcaster_user_name"`
 		ToBroadcasterID      string `json:"to_broadcaster_user_id"`
 		ToBroadcasterLogin   string `json:"to_broadcaster_user_login"`
-		Viewers              string `json:"viewers"`
+		Viewers              int    `json:"viewers"`
 	} `json:"event_data"`
 }
 
@@ -176,5 +176,26 @@ type HypeTrainEndedMsg struct {
 			Type      string `json:"type"`
 			Total     int    `json:"total"`
 		} `json:"top_contributions"`
+	} `json:"event_data"`
+}
+
+type StreamOnlineMsg struct {
+	*Event
+	EventData struct {
+		ID               string    `json:"id"`
+		BroadcasterID    string    `json:"broadcaster_user_id"`
+		BroadcasterName  string    `json:"broadcaster_user_name"`
+		BroadcasterLogin string    `json:"broadcaster_user_login"`
+		Type             string    `json:"type"`
+		StartedAt        time.Time `json:"started_at"`
+	} `json:"event_data"`
+}
+
+type StreamOfflineMsg struct {
+	*Event
+	EventData struct {
+		BroadcasterID    string `json:"broadcaster_user_id"`
+		BroadcasterName  string `json:"broadcaster_user_name"`
+		BroadcasterLogin string `json:"broadcaster_user_login"`
 	} `json:"event_data"`
 }

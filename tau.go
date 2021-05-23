@@ -16,6 +16,8 @@ type Client struct {
 	// callback functions
 	rawCallback               RawCallback
 	errorCallback             ErrorCallback
+	streamOnlineCallback      StreamOnlineCallback
+	streamOfflineCallback     StreamOfflineCallback
 	followCallback            FollowCallback
 	streamUpdateCallback      StreamUpdateCallback
 	cheerCallback             CheerCallback

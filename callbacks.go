@@ -4,6 +4,8 @@ import "fmt"
 
 type RawCallback func(msg []byte)
 type ErrorCallback func(err error)
+type StreamOnlineCallback func(msg *StreamOnlineMsg)
+type StreamOfflineCallback func(msg *StreamOfflineMsg)
 type FollowCallback func(msg *FollowMsg)
 type StreamUpdateCallback func(msg *StreamUpdateMsg)
 type CheerCallback func(msg *CheerMsg)
@@ -27,6 +29,20 @@ func (c *Client) SetErrorCallback(callback ErrorCallback) {
 	// Attempt to fix the heisenbug where if I don't acknowledge the callback it will be null
 	// TODO: Figure out an ACTUAL fix
 	_ = fmt.Sprintf("%p", c.errorCallback)
+}
+
+func (c *Client) SetStreamOnlineCallback(callback StreamOnlineCallback) {
+	c.streamOnlineCallback = callback
+	// Attempt to fix the heisenbug where if I don't acknowledge the callback it will be null
+	// TODO: Figure out an ACTUAL fix
+	_ = fmt.Sprintf("%p", c.streamOnlineCallback)
+}
+
+func (c *Client) SetStreamOfflineCallback(callback StreamOfflineCallback) {
+	c.streamOfflineCallback = callback
+	// Attempt to fix the heisenbug where if I don't acknowledge the callback it will be null
+	// TODO: Figure out an ACTUAL fix
+	_ = fmt.Sprintf("%p", c.streamOfflineCallback)
 }
 
 // SetFollowCallback sets a callback to be called on a follow event received.

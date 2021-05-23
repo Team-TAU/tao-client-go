@@ -61,10 +61,12 @@ func (c *Client) handleMessage(msg []byte) {
 			c.cheerCallback(cheerMsg)
 		}
 	case RAIDEVENT:
+		println("raid event found")
 		if c.raidCallback != nil {
 			raidMsg := new(RaidMsg)
 			err = json.Unmarshal(msg, raidMsg)
 			if err != nil {
+				println(err.Error())
 				return
 			}
 			c.raidCallback(raidMsg)
@@ -104,6 +106,24 @@ func (c *Client) handleMessage(msg []byte) {
 				return
 			}
 			c.hypeTrainEndedCallback(hypeMsg)
+		}
+	case STREAMONLINE:
+		if c.streamOnlineCallback != nil {
+			onlineMsg := new(StreamOnlineMsg)
+			err = json.Unmarshal(msg, onlineMsg)
+			if err != nil {
+				return
+			}
+			c.streamOnlineCallback(onlineMsg)
+		}
+	case STREAMOFFLINE:
+		if c.streamOfflineCallback != nil {
+			offlineMsg := new(StreamOfflineMsg)
+			err = json.Unmarshal(msg, offlineMsg)
+			if err != nil {
+				return
+			}
+			c.streamOfflineCallback(offlineMsg)
 		}
 	}
 }
