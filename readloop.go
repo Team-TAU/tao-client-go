@@ -61,12 +61,10 @@ func (c *Client) handleMessage(msg []byte) {
 			c.cheerCallback(cheerMsg)
 		}
 	case RAIDEVENT:
-		println("raid event found")
 		if c.raidCallback != nil {
 			raidMsg := new(RaidMsg)
 			err = json.Unmarshal(msg, raidMsg)
 			if err != nil {
-				println(err.Error())
 				return
 			}
 			c.raidCallback(raidMsg)
