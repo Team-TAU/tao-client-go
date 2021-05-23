@@ -11,6 +11,7 @@ type StreamUpdateCallback func(msg *StreamUpdateMsg)
 type CheerCallback func(msg *CheerMsg)
 type RaidCallback func(msg *RaidMsg)
 type SubscriptionCallback func(msg *SubscriptionMsg)
+type PointsRedemptionCallback func(msg *PointsRedemptionMsg)
 type HypeTrainBeginCallback func(msg *HypeTrainBeginMsg)
 type HypeTrainProgressCallback func(msg *HypeTrainProgressMsg)
 type HypeTrainEndCallback func(msg *HypeTrainEndedMsg)
@@ -83,6 +84,13 @@ func (c *Client) SetSubscriptionCallback(callback SubscriptionCallback) {
 	// Attempt to fix the heisenbug where if I don't acknowledge the callback it will be null
 	// TODO: Figure out an ACTUAL fix
 	_ = fmt.Sprintf("%p", c.subscriptionCallback)
+}
+
+func (c *Client) SetPointsRedemptionCallback(callback PointsRedemptionCallback) {
+	c.pointsRedemptionCallback = callback
+	// Attempt to fix the heisenbug where if I don't acknowledge the callback it will be null
+	// TODO: Figure out an ACTUAL fix
+	_ = fmt.Sprintf("%p", c.pointsRedemptionCallback)
 }
 
 // SetHypeTrainBeginCallback sets a callback to be called when a hype train begin event is received.

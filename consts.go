@@ -8,6 +8,7 @@ const (
 	CHEEREVENT        = "cheer"
 	RAIDEVENT         = "raid"
 	SUBSCRIPTIONEVENT = "subscribe"
+	POINTSREDEMPTION  = "point-redemption"
 	HYPEBEGIN         = "hype-train-begin"
 	HYPEPROGRESS      = "hype-train-progress"
 	HYPEEND           = "hype-train-end"

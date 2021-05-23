@@ -11,13 +11,13 @@ import (
 func TestHandleMessage(t *testing.T) {
 	client := Client{}
 	type testData struct {
-		msg                         string
-		testCase                    string
-		expectFollowCallback        bool
-		expectStreamUpdateCallback  bool
-		expectStreamOnlineCallback  bool
-		expectStreamOfflineCallback bool
-		//expectPointsRedemptionCallback  bool
+		msg                             string
+		testCase                        string
+		expectFollowCallback            bool
+		expectStreamUpdateCallback      bool
+		expectStreamOnlineCallback      bool
+		expectStreamOfflineCallback     bool
+		expectPointsRedemptionCallback  bool
 		expectCheerCallback             bool
 		expectRaidCallback              bool
 		expectSubscriptionCallback      bool
@@ -77,6 +77,11 @@ func TestHandleMessage(t *testing.T) {
 			testCase:                   "Expect Hype Train End Callback",
 			expectHypeTrainEndCallback: true,
 		},
+		{
+			msg:                            "{\"id\":null,\"event_id\":\"4dc3e5c5-3e38-4d2d-bfe2-9c89c65a8c2a\",\"event_type\":\"point-redemption\",\"event_source\":\"TestCall\",\"event_data\":{\"broadcaster_user_id\":\"47073625\",\"broadcaster_user_name\":\"wwsean08\",\"broadcaster_user_login\":\"wwsean08\",\"id\":\"649995ea-b88b-446d-a011-0cc183588bd4\",\"user_name\":\"FiniteSingularity\",\"user_id\":1234,\"user_login\":\"finitesingularity\",\"user_input\":\"\",\"status\":\"unfilled\",\"redeemed_at\":\"2021-05-22T20:36:06.427Z\",\"reward\":{\"id\":\"3859c466-8cff-4480-9e9e-b7e9814b405d\",\"title\":\"Free tier 1 sub\",\"prompt\":\"Sean will gift you a tier one sub to his channel for one month\",\"cost\":20000}},\"created\":\"2021-05-22T20:36:07.969806+00:00\",\"origin\":\"test\"}",
+			testCase:                       "Expect Points Redemption Callback",
+			expectPointsRedemptionCallback: true,
+		},
 	}
 
 	for _, test := range data {
@@ -110,6 +115,9 @@ func TestHandleMessage(t *testing.T) {
 		streamOffline := func(msg *StreamOfflineMsg) {
 			require.True(t, test.expectStreamOfflineCallback, test.testCase)
 		}
+		pointsCallback := func(msg *PointsRedemptionMsg) {
+			require.True(t, test.expectPointsRedemptionCallback, test.testCase)
+		}
 		client.SetFollowCallback(followCallback)
 		client.SetStreamUpdateCallback(streamUpdateCallback)
 		client.SetCheerCallback(cheerCallback)
@@ -120,6 +128,7 @@ func TestHandleMessage(t *testing.T) {
 		client.SetHypeTrainEndedCallback(hypeTrainEnded)
 		client.SetStreamOnlineCallback(streamOnline)
 		client.SetStreamOfflineCallback(streamOffline)
+		client.SetPointsRedemptionCallback(pointsCallback)
 
 		client.handleMessage([]byte(test.msg))
 	}
@@ -572,6 +581,54 @@ func TestHandleMessage_HypeTrainEndEvent(t *testing.T) {
 		hypeTrainEndedCallback: callback,
 	}
 	msg := "{\"id\":null,\"event_id\":\"f46bdbdc-4890-4199-9e7d-34f4ee9c2bdd\",\"event_type\":\"hype-train-end\",\"event_source\":\"TestCall\",\"event_data\":{\"broadcaster_user_id\":\"1337\",\"broadcaster_user_login\":\"cool_user\",\"broadcaster_user_name\":\"Cool_User\",\"level\":2,\"total\":137,\"top_contributions\":[{\"user_id\":\"123\",\"user_login\":\"pogchamp\",\"user_name\":\"PogChamp\",\"type\":\"bits\",\"total\":50},{\"user_id\":\"456\",\"user_login\":\"kappa\",\"user_name\":\"Kappa\",\"type\":\"subscription\",\"total\":45}],\"started_at\":\"2020-07-15T17:16:03.17106713Z\",\"ended_at\":\"2020-07-15T17:16:11.17106713Z\",\"cooldown_ends_at\":\"2020-07-15T18:16:11.17106713Z\"},\"created\":\"2021-05-22T20:36:07.969806+00:00\",\"origin\":\"test\"}"
+	client.handleMessage([]byte(msg))
+	require.True(t, called)
+}
+
+func TestHandleMessage_PointsRedemptionEvent(t *testing.T) {
+	called := false
+	callback := func(msg *PointsRedemptionMsg) {
+		called = true
+		require.NotNil(t, msg)
+		require.Zero(t, msg.ID)
+		require.Equal(t, "4dc3e5c5-3e38-4d2d-bfe2-9c89c65a8c2a", msg.EventID)
+		require.Equal(t, "point-redemption", msg.EventType)
+		require.Equal(t, "TestCall", msg.EventSource)
+		require.Equal(t, "test", msg.Origin)
+		require.Equal(t, 2021, msg.Created.Year())
+		require.Equal(t, time.Month(5), msg.Created.Month())
+		require.Equal(t, 22, msg.Created.Day())
+		require.Equal(t, 20, msg.Created.Hour())
+		require.Equal(t, 36, msg.Created.Minute())
+		require.Equal(t, 7, msg.Created.Second())
+		require.Equal(t, "47073625", msg.EventData.BroadcasterID)
+		require.Equal(t, "wwsean08", msg.EventData.BroadcasterName)
+		require.Equal(t, "wwsean08", msg.EventData.BroadcasterLogin)
+		require.Equal(t, "649995ea-b88b-446d-a011-0cc183588bd4", msg.EventData.ID)
+		require.Equal(t, "FiniteSingularity", msg.EventData.UserName)
+		require.Equal(t, "finitesingularity", msg.EventData.UserLogin)
+		require.Equal(t, "1234", msg.EventData.UserID)
+		require.Empty(t, msg.EventData.UserInput)
+		require.Equal(t, "unfilled", msg.EventData.Status)
+
+		redeemedAt := msg.EventData.RedeemedAt
+		require.Equal(t, 2021, redeemedAt.Year())
+		require.Equal(t, time.Month(5), redeemedAt.Month())
+		require.Equal(t, 22, redeemedAt.Day())
+		require.Equal(t, 20, redeemedAt.Hour())
+		require.Equal(t, 36, redeemedAt.Minute())
+		require.Equal(t, 6, redeemedAt.Second())
+
+		reward := msg.EventData.Reward
+		require.Equal(t, "3859c466-8cff-4480-9e9e-b7e9814b405d", reward.ID)
+		require.Equal(t, "Free tier 1 sub", reward.Title)
+		require.Equal(t, "Sean will gift you a tier one sub to his channel for one month", reward.Prompt)
+		require.Equal(t, 20000, reward.Cost)
+	}
+	client := Client{
+		pointsRedemptionCallback: callback,
+	}
+	msg := "{\"id\":null,\"event_id\":\"4dc3e5c5-3e38-4d2d-bfe2-9c89c65a8c2a\",\"event_type\":\"point-redemption\",\"event_source\":\"TestCall\",\"event_data\":{\"broadcaster_user_id\":\"47073625\",\"broadcaster_user_name\":\"wwsean08\",\"broadcaster_user_login\":\"wwsean08\",\"id\":\"649995ea-b88b-446d-a011-0cc183588bd4\",\"user_name\":\"FiniteSingularity\",\"user_id\":\"1234\",\"user_login\":\"finitesingularity\",\"user_input\":\"\",\"status\":\"unfilled\",\"redeemed_at\":\"2021-05-22T20:36:06.427Z\",\"reward\":{\"id\":\"3859c466-8cff-4480-9e9e-b7e9814b405d\",\"title\":\"Free tier 1 sub\",\"prompt\":\"Sean will gift you a tier one sub to his channel for one month\",\"cost\":20000}},\"created\":\"2021-05-22T20:36:07.969806+00:00\",\"origin\":\"test\"}"
 	client.handleMessage([]byte(msg))
 	require.True(t, called)
 }

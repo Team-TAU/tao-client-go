@@ -23,6 +23,7 @@ type Client struct {
 	cheerCallback             CheerCallback
 	raidCallback              RaidCallback
 	subscriptionCallback      SubscriptionCallback
+	pointsRedemptionCallback  PointsRedemptionCallback
 	hypeTrainBeginCallback    HypeTrainBeginCallback
 	hypeTrainProgressCallback HypeTrainProgressCallback
 	hypeTrainEndedCallback    HypeTrainEndCallback

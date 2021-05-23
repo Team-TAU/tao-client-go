@@ -199,3 +199,25 @@ type StreamOfflineMsg struct {
 		BroadcasterLogin string `json:"broadcaster_user_login"`
 	} `json:"event_data"`
 }
+
+type PointsRedemptionMsg struct {
+	*Event
+	EventData struct {
+		BroadcasterID    string    `json:"broadcaster_user_id"`
+		BroadcasterName  string    `json:"broadcaster_user_name"`
+		BroadcasterLogin string    `json:"broadcaster_user_login"`
+		ID               string    `json:"id"`
+		UserID           string    `json:"user_id"`
+		UserLogin        string    `json:"user_login"`
+		UserName         string    `json:"user_name"`
+		UserInput        string    `json:"user_input"`
+		Status           string    `json:"status"`
+		RedeemedAt       time.Time `json:"redeemed_at"`
+		Reward           struct {
+			ID     string `json:"id"`
+			Title  string `json:"title"`
+			Prompt string `json:"prompt"`
+			Cost   int    `json:"cost"`
+		} `json:"reward"`
+	} `json:"event_data"`
+}

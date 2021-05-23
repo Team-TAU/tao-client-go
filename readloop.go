@@ -78,6 +78,15 @@ func (c *Client) handleMessage(msg []byte) {
 			}
 			c.subscriptionCallback(subMsg)
 		}
+	case POINTSREDEMPTION:
+		if c.pointsRedemptionCallback != nil {
+			pointsMsg := new(PointsRedemptionMsg)
+			err = json.Unmarshal(msg, pointsMsg)
+			if err != nil {
+				return
+			}
+			c.pointsRedemptionCallback(pointsMsg)
+		}
 	case HYPEBEGIN:
 		if c.hypeTrainBeginCallback != nil {
 			hypeMsg := new(HypeTrainBeginMsg)
