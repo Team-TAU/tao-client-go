@@ -30,7 +30,7 @@ func main() {
 }
 
 func onFollow(msg *tau.FollowMsg) {
-	f, err := os.OpenFile("newestFollower.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
+	f, err := os.OpenFile("newestFollower.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
 		println(err.Error())
 	}
@@ -40,7 +40,7 @@ func onFollow(msg *tau.FollowMsg) {
 }
 
 func onSub(msg *tau.SubscriptionMsg) {
-	f, err := os.OpenFile("newestSub.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
+	f, err := os.OpenFile("newestSub.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
 		println(err.Error())
 	}
@@ -50,7 +50,7 @@ func onSub(msg *tau.SubscriptionMsg) {
 }
 
 func onCheer(msg *tau.CheerMsg) {
-	f, err := os.OpenFile("newestCheer.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
+	f, err := os.OpenFile("newestCheer.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
 		println(err.Error())
 	}
