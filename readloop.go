@@ -1,4 +1,4 @@
-package go_tau
+package gotau
 
 import (
 	"encoding/json"
@@ -33,7 +33,7 @@ func (c *Client) handleMessage(msg []byte) {
 	}
 
 	switch event.EventType {
-	case FOLLOWEVENT:
+	case follow:
 		if c.followCallback != nil {
 			followMsg := new(FollowMsg)
 			err = json.Unmarshal(msg, followMsg)
@@ -42,7 +42,7 @@ func (c *Client) handleMessage(msg []byte) {
 			}
 			c.followCallback(followMsg)
 		}
-	case UPDATEEVENT:
+	case update:
 		if c.streamUpdateCallback != nil {
 			updateMsg := new(StreamUpdateMsg)
 			err = json.Unmarshal(msg, updateMsg)
@@ -51,7 +51,7 @@ func (c *Client) handleMessage(msg []byte) {
 			}
 			c.streamUpdateCallback(updateMsg)
 		}
-	case CHEEREVENT:
+	case cheer:
 		if c.cheerCallback != nil {
 			cheerMsg := new(CheerMsg)
 			err = json.Unmarshal(msg, cheerMsg)
@@ -60,7 +60,7 @@ func (c *Client) handleMessage(msg []byte) {
 			}
 			c.cheerCallback(cheerMsg)
 		}
-	case RAIDEVENT:
+	case raid:
 		if c.raidCallback != nil {
 			raidMsg := new(RaidMsg)
 			err = json.Unmarshal(msg, raidMsg)
@@ -69,7 +69,7 @@ func (c *Client) handleMessage(msg []byte) {
 			}
 			c.raidCallback(raidMsg)
 		}
-	case SUBSCRIPTIONEVENT:
+	case subscription:
 		if c.subscriptionCallback != nil {
 			subMsg := new(SubscriptionMsg)
 			err = json.Unmarshal(msg, subMsg)
@@ -78,7 +78,7 @@ func (c *Client) handleMessage(msg []byte) {
 			}
 			c.subscriptionCallback(subMsg)
 		}
-	case POINTSREDEMPTION:
+	case pointsRedemption:
 		if c.pointsRedemptionCallback != nil {
 			pointsMsg := new(PointsRedemptionMsg)
 			err = json.Unmarshal(msg, pointsMsg)
@@ -87,7 +87,7 @@ func (c *Client) handleMessage(msg []byte) {
 			}
 			c.pointsRedemptionCallback(pointsMsg)
 		}
-	case HYPEBEGIN:
+	case hypeBegin:
 		if c.hypeTrainBeginCallback != nil {
 			hypeMsg := new(HypeTrainBeginMsg)
 			err = json.Unmarshal(msg, hypeMsg)
@@ -96,7 +96,7 @@ func (c *Client) handleMessage(msg []byte) {
 			}
 			c.hypeTrainBeginCallback(hypeMsg)
 		}
-	case HYPEPROGRESS:
+	case hypeProgress:
 		if c.hypeTrainProgressCallback != nil {
 			hypeMsg := new(HypeTrainProgressMsg)
 			err = json.Unmarshal(msg, hypeMsg)
@@ -105,7 +105,7 @@ func (c *Client) handleMessage(msg []byte) {
 			}
 			c.hypeTrainProgressCallback(hypeMsg)
 		}
-	case HYPEEND:
+	case hypeEnd:
 		if c.hypeTrainEndedCallback != nil {
 			hypeMsg := new(HypeTrainEndedMsg)
 			err = json.Unmarshal(msg, hypeMsg)
@@ -114,7 +114,7 @@ func (c *Client) handleMessage(msg []byte) {
 			}
 			c.hypeTrainEndedCallback(hypeMsg)
 		}
-	case STREAMONLINE:
+	case streamOnline:
 		if c.streamOnlineCallback != nil {
 			onlineMsg := new(StreamOnlineMsg)
 			err = json.Unmarshal(msg, onlineMsg)
@@ -123,7 +123,7 @@ func (c *Client) handleMessage(msg []byte) {
 			}
 			c.streamOnlineCallback(onlineMsg)
 		}
-	case STREAMOFFLINE:
+	case streamOffline:
 		if c.streamOfflineCallback != nil {
 			offlineMsg := new(StreamOfflineMsg)
 			err = json.Unmarshal(msg, offlineMsg)

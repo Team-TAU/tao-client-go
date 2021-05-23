@@ -1,4 +1,4 @@
-package go_tau
+package gotau
 
 import (
 	"encoding/json"
@@ -63,6 +63,7 @@ func NewClient(hostname string, port int, token string, hasSSL bool) (*Client, e
 	return client, nil
 }
 
+// SendMessage Allows you to send json message to the server.
 func (c *Client) SendMessage(msg interface{}) error {
 	c.writeLock.Lock()
 	defer c.writeLock.Unlock()

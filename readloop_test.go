@@ -1,4 +1,4 @@
-package go_tau
+package gotau
 
 import (
 	"github.com/stretchr/testify/require"
@@ -141,7 +141,7 @@ func TestHandleMessage_FollowEvent(t *testing.T) {
 		require.NotNil(t, msg)
 		require.Zero(t, msg.ID)
 		require.Equal(t, "69db248a-b980-4de6-ad06-b528feb1294e", msg.EventID)
-		require.Equal(t, FOLLOWEVENT, msg.EventType)
+		require.Equal(t, follow, msg.EventType)
 		require.Equal(t, "TestCall", msg.EventSource)
 		require.Equal(t, "test", msg.Origin)
 		require.Equal(t, 2021, msg.Created.Year())
@@ -174,7 +174,7 @@ func TestHandleMessage_UpdateEvent(t *testing.T) {
 		require.NotNil(t, msg)
 		require.Zero(t, msg.ID)
 		require.Equal(t, "286244d9-c382-4a6e-81ed-5e80bcd2c94e", msg.EventID)
-		require.Equal(t, UPDATEEVENT, msg.EventType)
+		require.Equal(t, update, msg.EventType)
 		require.Equal(t, "TestCall", msg.EventSource)
 		require.Equal(t, "test", msg.Origin)
 		require.Equal(t, 2021, msg.Created.Year())
@@ -207,7 +207,7 @@ func TestHandleMessage_CheerEvent(t *testing.T) {
 		require.NotNil(t, msg)
 		require.Zero(t, msg.ID)
 		require.Equal(t, "ae567342-62c8-4b45-a41b-7da1472003b9", msg.EventID)
-		require.Equal(t, CHEEREVENT, msg.EventType)
+		require.Equal(t, cheer, msg.EventType)
 		require.Equal(t, "TestCall", msg.EventSource)
 		require.Equal(t, "test", msg.Origin)
 		require.Equal(t, 2021, msg.Created.Year())
@@ -243,7 +243,7 @@ func TestHandleMessage_RaidEvent(t *testing.T) {
 		require.NotNil(t, msg)
 		require.Zero(t, msg.ID)
 		require.Equal(t, "3e62303f-55d3-478d-8f09-c83712e7c3b8", msg.EventID)
-		require.Equal(t, RAIDEVENT, msg.EventType)
+		require.Equal(t, raid, msg.EventType)
 		require.Equal(t, "TestCall", msg.EventSource)
 		require.Equal(t, "test", msg.Origin)
 		require.Equal(t, 2021, msg.Created.Year())
@@ -276,7 +276,7 @@ func TestHandleMessage_SubEvent(t *testing.T) {
 		require.NotNil(t, msg)
 		require.Zero(t, msg.ID)
 		require.Zero(t, msg.EventID)
-		require.Equal(t, SUBSCRIPTIONEVENT, msg.EventType)
+		require.Equal(t, subscription, msg.EventType)
 		require.Equal(t, "TestCall", msg.EventSource)
 		require.Equal(t, "test", msg.Origin)
 		require.Equal(t, 2021, msg.Created.Year())

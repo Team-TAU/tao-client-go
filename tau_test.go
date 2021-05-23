@@ -1,4 +1,4 @@
-package go_tau
+package gotau
 
 import (
 	"github.com/stretchr/testify/require"

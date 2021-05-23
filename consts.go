@@ -1,15 +1,15 @@
-package go_tau
+package gotau
 
 const (
-	STREAMONLINE      = "stream-online"
-	STREAMOFFLINE     = "stream-offline"
-	FOLLOWEVENT       = "follow"
-	UPDATEEVENT       = "update"
-	CHEEREVENT        = "cheer"
-	RAIDEVENT         = "raid"
-	SUBSCRIPTIONEVENT = "subscribe"
-	POINTSREDEMPTION  = "point-redemption"
-	HYPEBEGIN         = "hype-train-begin"
-	HYPEPROGRESS      = "hype-train-progress"
-	HYPEEND           = "hype-train-end"
+	streamOnline     = "stream-online"
+	streamOffline    = "stream-offline"
+	follow           = "follow"
+	update           = "update"
+	cheer            = "cheer"
+	raid             = "raid"
+	subscription     = "subscribe"
+	pointsRedemption = "point-redemption"
+	hypeBegin        = "hype-train-begin"
+	hypeProgress     = "hype-train-progress"
+	hypeEnd          = "hype-train-end"
 )

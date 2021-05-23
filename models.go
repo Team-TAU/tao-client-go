@@ -1,7 +1,8 @@
-package go_tau
+package gotau
 
 import "time"
 
+// Event is the common parts of every event coming from TAU
 type Event struct {
 	ID          string `json:"id"`
 	EventID     string `json:"event_id"`
@@ -11,6 +12,7 @@ type Event struct {
 	Origin      string `json:"origin"`
 }
 
+// FollowMsg is a message representing a follow event that TAU sends
 type FollowMsg struct {
 	*Event
 	EventData struct {
@@ -23,6 +25,7 @@ type FollowMsg struct {
 	} `json:"event_data"`
 }
 
+// StreamUpdateMsg is a message that represents a stream update event that TAU sends
 type StreamUpdateMsg struct {
 	*Event
 	EventData struct {
@@ -37,6 +40,7 @@ type StreamUpdateMsg struct {
 	} `json:"event_data"`
 }
 
+// CheerMsg is a message that represents a cheer event that TAU sends
 type CheerMsg struct {
 	*Event
 	EventData struct {
@@ -52,6 +56,7 @@ type CheerMsg struct {
 	} `json:"event_data"`
 }
 
+// RaidMsg is a message that represents a raid event that TAU sends
 type RaidMsg struct {
 	*Event
 	EventData struct {
@@ -65,6 +70,7 @@ type RaidMsg struct {
 	} `json:"event_data"`
 }
 
+// SubscriptionMsg is a message that represents a subscription event that TAU sends
 type SubscriptionMsg struct {
 	*Event
 	EventData struct {
@@ -100,6 +106,7 @@ type SubscriptionMsg struct {
 	} `json:"event_data"`
 }
 
+// HypeTrainBeginMsg is a message that represents a hype train begin event that TAU sends
 type HypeTrainBeginMsg struct {
 	*Event
 	EventData struct {
@@ -128,6 +135,7 @@ type HypeTrainBeginMsg struct {
 	} `json:"event_data"`
 }
 
+// HypeTrainProgressMsg is a message that represents a hype train progress event that TAU sends
 type HypeTrainProgressMsg struct {
 	*Event
 	EventData struct {
@@ -157,6 +165,7 @@ type HypeTrainProgressMsg struct {
 	} `json:"event_data"`
 }
 
+// HypeTrainEndedMsg is a message that represents a hype train end event that TAU sends
 type HypeTrainEndedMsg struct {
 	*Event
 	EventData struct {
@@ -179,6 +188,7 @@ type HypeTrainEndedMsg struct {
 	} `json:"event_data"`
 }
 
+// StreamOnlineMsg is a message that represents a stream online event that TAU sends
 type StreamOnlineMsg struct {
 	*Event
 	EventData struct {
@@ -191,6 +201,7 @@ type StreamOnlineMsg struct {
 	} `json:"event_data"`
 }
 
+// StreamOfflineMsg is a message that represents a stream offline event that TAU sends
 type StreamOfflineMsg struct {
 	*Event
 	EventData struct {
@@ -200,6 +211,7 @@ type StreamOfflineMsg struct {
 	} `json:"event_data"`
 }
 
+// PointsRedemptionMsg is a message that represents a points redemption event that TAU sends
 type PointsRedemptionMsg struct {
 	*Event
 	EventData struct {
