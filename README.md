@@ -17,6 +17,7 @@ You can implement any/all of these callbacks in your own code to take advantage 
 * CheerCallback(msg *CheerMsg) - Called when a cheer event is received.
 * RaidCallback(msg *RaidMsg) - Called when a raid event is received.
 * SubscriptionCallback(msg *SubscriptionMsg) - Called when a subscription event is received.
+* PointsRedemptionCallback(msg *PointsRedemptionMsg) - Called when a points redemption event is received. _Breaking change coming in a future version based on an upcoming TAU change_
 * HypeTrainBeginCallback(msg *HypeTrainBeginMsg) - Called when a hype train beginning event is received.
 * HypeTrainProgressCallback(msg *HypeTrainProgressMsg) - Called when a hype train progress event is received.
 * HypeTrainEndCallback(msg *HypeTrainEndedMsg) - Called when a hype train end event is received.
