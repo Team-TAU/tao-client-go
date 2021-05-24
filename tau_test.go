@@ -48,3 +48,12 @@ func TestGetAuthToken_InvalidRequest(t *testing.T) {
 	require.Error(t, err)
 	require.Equal(t, "", token)
 }
+
+func TestClient_SetParallelProcessing(t *testing.T) {
+	client := new(Client)
+	require.False(t, client.parallelProcessing)
+	client.SetParallelProcessing(true)
+	require.True(t, client.parallelProcessing)
+	client.SetParallelProcessing(false)
+	require.False(t, client.parallelProcessing)
+}

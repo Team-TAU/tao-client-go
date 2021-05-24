@@ -15,11 +15,14 @@ func (c *Client) readLoop() {
 			}
 		}
 
-		c.handleMessage(message)
+		if c.parallelProcessing {
+			go c.handleMessage(message)
+		} else {
+			c.handleMessage(message)
+		}
 	}
 }
 
-//TODO: Log parsing errors
 func (c *Client) handleMessage(msg []byte) {
 	if c.rawCallback != nil {
 		c.rawCallback(msg)

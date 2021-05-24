@@ -12,10 +12,11 @@ import "github.com/gorilla/websocket"
 
 // Client represents a client connected to TAU
 type Client struct {
-	conn      *websocket.Conn
-	hostname  string
-	port      int
-	writeLock *sync.Mutex
+	conn               *websocket.Conn
+	hostname           string
+	port               int
+	writeLock          *sync.Mutex
+	parallelProcessing bool
 
 	// callback functions
 	rawCallback               RawCallback
@@ -36,9 +37,10 @@ type Client struct {
 // NewClient allows you to get a new client that is connected to TAU
 func NewClient(hostname string, port int, token string, hasSSL bool) (*Client, error) {
 	client := &Client{
-		hostname:  hostname,
-		port:      port,
-		writeLock: new(sync.Mutex),
+		hostname:           hostname,
+		port:               port,
+		writeLock:          new(sync.Mutex),
+		parallelProcessing: false,
 	}
 	prefix := "ws://"
 	if hasSSL {
@@ -68,6 +70,12 @@ func (c *Client) SendMessage(msg interface{}) error {
 	c.writeLock.Lock()
 	defer c.writeLock.Unlock()
 	return c.conn.WriteJSON(msg)
+}
+
+// SetParallelProcessing Allows you to enable processing events in parallel.  By default this is false, and most people
+//probably would want it to be false, but there could be cases where processing in parallel would be useful/desirable.
+func (c *Client) SetParallelProcessing(parallel bool) {
+	c.parallelProcessing = parallel
 }
 
 // GetAuthToken is used to get the auth token for a user to interact with TAU given a username and password.
