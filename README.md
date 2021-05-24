@@ -6,7 +6,7 @@
 
 This library is designed to make integrating with [TAU](https://github.com/FiniteSingularity/tau) in go, taking care of parsing out the messages and calling the registered receivers, leaving you to handle the logic.
 
-## Supported Callbacks
+## Callbacks
 You can implement any/all of these callbacks in your own code to take advantage of this library allowing you to take care of the business logic, while this library takes care of parsing messages into usable structs.
 
 * `RawCallback(msg []byte)` - All websocket messages received will be forwarded to this callback untouched.  Note this will not stop processing via more specific callbacks.
@@ -23,5 +23,5 @@ You can implement any/all of these callbacks in your own code to take advantage 
 * `HypeTrainProgressCallback(msg *HypeTrainProgressMsg)` - Called when a hype train progress event is received.
 * `HypeTrainEndCallback(msg *HypeTrainEndedMsg)` - Called when a hype train end event is received.
 
-## Support Functions
+## Utility Functions
 * `GetAuthToken` - Allows for getting your auth token via username and password.  Ideally you would keep your auth token in your config, but this just gives you another option of how to get the data.
