@@ -3,6 +3,7 @@
 [![coverage report](https://gitlab.com/wwsean08/go-tau/badges/main/coverage.svg)](https://gitlab.com/wwsean08/go-tau/-/commits/main)
 [![Go Reference](https://pkg.go.dev/badge/gitlab.com/wwsean08/go-tau.svg)](https://pkg.go.dev/gitlab.com/wwsean08/go-tau)
 [![Go Report Card](https://goreportcard.com/badge/gitlab.com/wwsean08/go-tau)](https://goreportcard.com/report/gitlab.com/wwsean08/go-tau)
+[![discord](https://img.shields.io/discord/493162062524973056?label=discord)](https://discord.gg/PPVYMeP)
 
 This library is designed to make integrating with [TAU](https://github.com/FiniteSingularity/tau) in go, taking care of parsing out the messages and calling the registered receivers, leaving you to handle the logic.
 
