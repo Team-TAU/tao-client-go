@@ -15,6 +15,8 @@ type Client struct {
 	conn               *websocket.Conn
 	hostname           string
 	port               int
+	hasSSL             bool
+	token              string
 	writeLock          *sync.Mutex
 	parallelProcessing bool
 
@@ -39,24 +41,14 @@ func NewClient(hostname string, port int, token string, hasSSL bool) (*Client, e
 	client := &Client{
 		hostname:           hostname,
 		port:               port,
+		hasSSL:             hasSSL,
+		token:              token,
 		writeLock:          new(sync.Mutex),
 		parallelProcessing: false,
 	}
-	prefix := "ws://"
-	if hasSSL {
-		prefix = "wss://"
-	}
-	conn, _, err := websocket.DefaultDialer.Dial(fmt.Sprintf("%s%s:%d/ws/twitch-events/", prefix, hostname, port), nil)
-	if err != nil {
-		return nil, err
-	}
+	conn, err := connect(hostname, port, hasSSL)
 	client.conn = conn
-	login := struct {
-		Token string `json:"token"`
-	}{
-		Token: token,
-	}
-	err = client.SendMessage(login)
+	err = client.login()
 	if err != nil {
 		return nil, err
 	}
@@ -76,6 +68,37 @@ func (c *Client) SendMessage(msg interface{}) error {
 //probably would want it to be false, but there could be cases where processing in parallel would be useful/desirable.
 func (c *Client) SetParallelProcessing(parallel bool) {
 	c.parallelProcessing = parallel
+}
+
+// Reconnect can be used to reconnect if a connection error comes in via the ErrorCallback.
+func (c *Client) Reconnect() error {
+	if c.conn != nil {
+		_ = c.conn.Close()
+	}
+	conn, err := connect(c.hostname, c.port, c.hasSSL)
+	if err != nil {
+		return err
+	}
+	c.conn = conn
+	return c.login()
+}
+
+func (c *Client) login() error {
+	login := struct {
+		Token string `json:"token"`
+	}{
+		Token: c.token,
+	}
+	return c.SendMessage(login)
+}
+
+func connect(hostname string, port int, hasSSL bool) (*websocket.Conn, error) {
+	prefix := "ws://"
+	if hasSSL {
+		prefix = "wss://"
+	}
+	conn, _, err := websocket.DefaultDialer.Dial(fmt.Sprintf("%s%s:%d/ws/twitch-events/", prefix, hostname, port), nil)
+	return conn, err
 }
 
 // GetAuthToken is used to get the auth token for a user to interact with TAU given a username and password.

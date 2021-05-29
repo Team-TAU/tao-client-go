@@ -25,3 +25,4 @@ You can implement any/all of these callbacks in your own code to take advantage 
 
 ## Utility Functions
 * `GetAuthToken` - Allows for getting your auth token via username and password.  Ideally you would keep your auth token in your config, but this just gives you another option of how to get the data.
+* `Reconnect` - Can be used to reconnect to the websocket on a connection error via the `ErrorCallback`.
