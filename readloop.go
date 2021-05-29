@@ -10,6 +10,7 @@ func (c *Client) readLoop() {
 		if err != nil {
 			if c.errorCallback != nil {
 				c.errorCallback(err)
+				return
 			} else {
 				panic(err.Error())
 			}

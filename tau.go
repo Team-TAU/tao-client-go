@@ -83,6 +83,7 @@ func (c *Client) Reconnect() error {
 		return err
 	}
 	c.conn = conn
+	go c.readLoop()
 	return c.login()
 }
 

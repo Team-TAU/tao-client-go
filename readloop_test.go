@@ -1,7 +1,16 @@
 package gotau
 
 import (
+	"encoding/json"
+	"github.com/gorilla/websocket"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"net"
+	"net/http"
+	"net/http/httptest"
+	"strconv"
+	"strings"
+	"sync"
 	"testing"
 	"time"
 )
@@ -631,4 +640,135 @@ func TestHandleMessage_PointsRedemptionEvent(t *testing.T) {
 	msg := "{\"id\":null,\"event_id\":\"4dc3e5c5-3e38-4d2d-bfe2-9c89c65a8c2a\",\"event_type\":\"point-redemption\",\"event_source\":\"TestCall\",\"event_data\":{\"broadcaster_user_id\":\"47073625\",\"broadcaster_user_name\":\"wwsean08\",\"broadcaster_user_login\":\"wwsean08\",\"id\":\"649995ea-b88b-446d-a011-0cc183588bd4\",\"user_name\":\"FiniteSingularity\",\"user_id\":\"1234\",\"user_login\":\"finitesingularity\",\"user_input\":\"\",\"status\":\"unfilled\",\"redeemed_at\":\"2021-05-22T20:36:06.427Z\",\"reward\":{\"id\":\"3859c466-8cff-4480-9e9e-b7e9814b405d\",\"title\":\"Free tier 1 sub\",\"prompt\":\"Sean will gift you a tier one sub to his channel for one month\",\"cost\":20000}},\"created\":\"2021-05-22T20:36:07.969806+00:00\",\"origin\":\"test\"}"
 	client.handleMessage([]byte(msg))
 	require.True(t, called)
+}
+
+func TestClient_ReadLoopHandleMessage(t *testing.T) {
+	upgrader := websocket.Upgrader{}
+	wg := new(sync.WaitGroup)
+	called := 0
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		type token struct {
+			Token string `json:"token"`
+		}
+		c, err := upgrader.Upgrade(w, r, nil)
+		require.NoError(t, err)
+		defer c.Close()
+		for {
+			_, message, err := c.ReadMessage()
+			if !assert.NoError(t, err) {
+				wg.Done()
+				continue
+			}
+
+			myToken := new(token)
+			err = json.Unmarshal(message, myToken)
+			if !assert.NoError(t, err) {
+				wg.Done()
+				continue
+			}
+			if !assert.Equal(t, "foo", myToken.Token) {
+				wg.Done()
+				continue
+			}
+			return
+		}
+	}
+	server := httptest.NewServer(http.HandlerFunc(handler))
+	defer server.Close()
+
+	errHandler := func(err error) {
+		require.Error(t, err)
+		require.IsType(t, &websocket.CloseError{}, err)
+		called += 1
+		wg.Done()
+	}
+
+	url := strings.TrimPrefix(server.URL, "http://")
+	host, port, err := net.SplitHostPort(url)
+	require.NoError(t, err)
+	portNum, err := strconv.Atoi(port)
+	require.NoError(t, err)
+	client := Client{
+		hostname:      host,
+		port:          portNum,
+		hasSSL:        false,
+		writeLock:     new(sync.Mutex),
+		token:         "foo",
+		errorCallback: errHandler,
+	}
+	wg.Add(1)
+	err = client.Reconnect()
+	wg.Wait()
+	require.NoError(t, err)
+
+	require.Equal(t, 1, called)
+}
+
+func TestClient_ReadLoopOnError(t *testing.T) {
+	upgrader := websocket.Upgrader{}
+	wg := new(sync.WaitGroup)
+	called := 0
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		type token struct {
+			Token string `json:"token"`
+		}
+		c, err := upgrader.Upgrade(w, r, nil)
+		require.NoError(t, err)
+		defer c.Close()
+		for {
+			_, message, err := c.ReadMessage()
+			if !assert.NoError(t, err) {
+				wg.Done()
+				continue
+			}
+
+			myToken := new(token)
+			err = json.Unmarshal(message, myToken)
+			if !assert.NoError(t, err) {
+				wg.Done()
+				continue
+			}
+			if !assert.Equal(t, "foo", myToken.Token) {
+				wg.Done()
+				continue
+			} else {
+				data := struct {
+					value string
+				}{
+					value: "foo",
+				}
+				err = c.WriteJSON(data)
+				require.NoError(t, err)
+			}
+		}
+	}
+	server := httptest.NewServer(http.HandlerFunc(handler))
+	defer server.Close()
+
+	msgHandler := func(data []byte) {
+		require.NotNil(t, data)
+		require.NotZero(t, data)
+		called += 1
+		wg.Done()
+	}
+
+	url := strings.TrimPrefix(server.URL, "http://")
+	host, port, err := net.SplitHostPort(url)
+	require.NoError(t, err)
+	portNum, err := strconv.Atoi(port)
+	require.NoError(t, err)
+	client := Client{
+		hostname:    host,
+		port:        portNum,
+		hasSSL:      false,
+		writeLock:   new(sync.Mutex),
+		token:       "foo",
+		rawCallback: msgHandler,
+	}
+	wg.Add(1)
+	err = client.Reconnect()
+	wg.Wait()
+	require.NoError(t, err)
+
+	require.Equal(t, 1, called)
 }
