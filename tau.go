@@ -47,6 +47,9 @@ func NewClient(hostname string, port int, token string, hasSSL bool) (*Client, e
 		parallelProcessing: false,
 	}
 	conn, err := connect(hostname, port, hasSSL)
+	if err != nil {
+		return nil, err
+	}
 	client.conn = conn
 	err = client.login()
 	if err != nil {
