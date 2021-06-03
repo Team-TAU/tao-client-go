@@ -26,12 +26,7 @@ unit-test-go:
   stage: test
   parallel:
     matrix:
-      - GOVERSION:
-          - 1.16
-          - 1.15
-          - 1.14
-          - 1.13
-          - 1.12
+      - GOVERSION: ["1.12", "1.13", "1.14", "1.15", "1.16"]
   image: golang:$GOVERSION
   before_script:
     - go mod download
@@ -79,12 +74,7 @@ build-raw-receive-example:
   stage: build-example
   parallel:
     matrix:
-      - GOVERSION:
-          - 1.16
-          - 1.15
-          - 1.14
-          - 1.13
-          - 1.12
+      - GOVERSION: ["1.12", "1.13", "1.14", "1.15", "1.16"]
   image: golang:$GOVERSION
   before_script:
     - go mod download
@@ -97,12 +87,7 @@ build-save-latests-example:
   stage: build-example
   parallel:
     matrix:
-      - GOVERSION:
-          - 1.16
-          - 1.15
-          - 1.14
-          - 1.13
-          - 1.12
+      - GOVERSION: ["1.12", "1.13", "1.14", "1.15", "1.16"]
   image: golang:$GOVERSION
   before_script:
     - go mod download
