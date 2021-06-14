@@ -59,7 +59,7 @@ lint:
   image: golang:1.16
   before_script:
     - go mod download
-    - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.37.1
+    - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.40.1
   script:
     - golangci-lint run
     - golangci-lint run --out-format junit-xml > junit.xml
