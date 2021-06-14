@@ -2,6 +2,7 @@ package helix
 
 import "time"
 
+// TwitchPagination represents pagination data from twitch on endpoints that support multi-paged responses.
 type TwitchPagination struct {
 	Cursor string `json:"cursor"`
 }
@@ -127,6 +128,7 @@ type ExtensionTransactions struct {
 	Pagination *TwitchPagination `json:"pagination"`
 }
 
+// CustomRewardImage represents the various images associated with a custom reward.
 type CustomRewardImage struct {
 	Url1X string `json:"url_1x"`
 	Url2X string `json:"url_2x"`
@@ -613,6 +615,7 @@ type Users struct {
 	} `json:"data"`
 }
 
+// UserFollows represents the response from Get User Follows, see https://dev.twitch.tv/docs/api/reference#get-users-follows
 type UserFollows struct {
 	Total int `json:"total"`
 	Data  []struct {

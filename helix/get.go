@@ -1741,6 +1741,7 @@ func (c *Client) GetVideosByGame(gameID, before, after, language string, count i
 	return videos, nil
 }
 
+// GetWebhookSubscriptions makes an api call to https://dev.twitch.tv/docs/api/reference#get-webhook-subscriptions, and formats the data.
 func (c *Client) GetWebhookSubscriptions(after string, count int) (*WebhookSubscriptions, error) {
 	if count > 100 {
 		return nil, BadRequestError{

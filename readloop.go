@@ -11,9 +11,8 @@ func (c *Client) readLoop() {
 			if c.errorCallback != nil {
 				c.errorCallback(err)
 				return
-			} else {
-				panic(err.Error())
 			}
+			panic(err.Error())
 		}
 
 		if c.parallelProcessing {
