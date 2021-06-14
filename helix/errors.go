@@ -18,3 +18,21 @@ type BadRequestError struct {
 func (b BadRequestError) Error() string {
 	return b.err
 }
+
+type GenericError struct {
+	err  string
+	body []byte
+	code int
+}
+
+func (g GenericError) Error() string {
+	return g.err
+}
+
+func (g GenericError) Body() string {
+	return string(g.body)
+}
+
+func (g GenericError) StatusCode() int {
+	return g.code
+}

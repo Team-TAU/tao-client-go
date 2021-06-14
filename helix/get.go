@@ -46,7 +46,12 @@ func (c *Client) GetRequest(endpoint string, queryParams map[string][]string) ([
 	}
 	if response.StatusCode != 200 {
 		body, _ := ioutil.ReadAll(response.Body)
-		return nil, fmt.Errorf("error making request to twitch, %s", string(body))
+		err = GenericError{
+			err:  fmt.Sprintf("%d error making request to twitch, %s", response.StatusCode, string(body)),
+			code: response.StatusCode,
+			body: body,
+		}
+		return nil, err
 	}
 	return ioutil.ReadAll(response.Body)
 }
