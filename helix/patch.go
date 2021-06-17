@@ -238,6 +238,9 @@ func (c *Client) EndPoll(broadcasterID, pollID, status string) (*Polls, error) {
 	}
 
 	_, responseBody, err := c.PatchRequest("polls", nil, body)
+	if err != nil {
+		return nil, err
+	}
 	polls := new(Polls)
 	err = json.Unmarshal(responseBody, polls)
 	if err != nil {
@@ -287,7 +290,9 @@ func (c *Client) EndPrediction(broadcasterID, predictionID, status string, winni
 	}
 
 	_, responseBody, err := c.PatchRequest("predictions", nil, body)
-
+	if err != nil {
+		return nil, err
+	}
 	prediction := new(Predictions)
 	err = json.Unmarshal(responseBody, prediction)
 	if err != nil {
