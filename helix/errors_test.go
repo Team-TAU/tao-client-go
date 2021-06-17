@@ -22,3 +22,21 @@ func TestBadRequestError_Error(t *testing.T) {
 	require.Error(t, err)
 	require.Equal(t, "Malformed request", err.Error())
 }
+
+func TestGenericError_Error(t *testing.T) {
+	err := GenericError{
+		err: "Generic Error",
+	}
+
+	require.Error(t, err)
+	require.Equal(t, "Generic Error", err.Error())
+}
+
+func TestRateLimitError_Error(t *testing.T) {
+	err := RateLimitError{
+		err: "Rate Limit Error",
+	}
+
+	require.Error(t, err)
+	require.Equal(t, "Rate Limit Error", err.Error())
+}
