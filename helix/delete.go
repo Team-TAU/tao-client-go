@@ -42,6 +42,10 @@ func (c *Client) DeleteRequest(endpoint string, params map[string][]string) (boo
 	}
 	if response.StatusCode == 401 {
 		return false, AuthorizationError{}
+	} else if response.StatusCode == 429 {
+		return false, RateLimitError{
+			"rate limited: received http 429",
+		}
 	} else {
 		body, _ := ioutil.ReadAll(response.Body)
 		err = GenericError{

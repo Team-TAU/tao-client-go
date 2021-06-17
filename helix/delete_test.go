@@ -59,6 +59,31 @@ func TestClient_DeleteRequestReturnsAuthError(t *testing.T) {
 	require.False(t, deleted)
 }
 
+func TestClient_DeleteRequestReturnsRateLimitError(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, "/api/twitch/helix/channel_points/custom_rewards/", r.URL.Path)
+		require.Equal(t, "Token foo", r.Header.Get("Authorization"))
+		require.Equal(t, "DELETE", r.Method)
+		w.WriteHeader(http.StatusTooManyRequests)
+	}))
+	defer ts.Close()
+
+	url := strings.TrimPrefix(ts.URL, "http://")
+	host, port, err := net.SplitHostPort(url)
+	require.NoError(t, err)
+	portNum, err := strconv.Atoi(port)
+	require.NoError(t, err)
+
+	client, err := NewClient(host, portNum, "foo", false)
+	require.NoError(t, err)
+	require.NotNil(t, client)
+
+	deleted, err := client.DeleteRequest("channel_points/custom_rewards", nil)
+	require.Error(t, err)
+	require.IsType(t, RateLimitError{"rate limited: received http 429"}, err)
+	require.False(t, deleted)
+}
+
 func TestClient_DeleteRequestReturnsGenericError(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		require.Equal(t, "/api/twitch/helix/channel_points/custom_rewards/", r.URL.Path)
