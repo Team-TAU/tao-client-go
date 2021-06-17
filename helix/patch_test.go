@@ -14,6 +14,59 @@ import (
 	"time"
 )
 
+func TestClient_PatchRequestReturnsAuthError(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, "/api/twitch/helix/channels/", r.URL.Path)
+		require.Equal(t, "Token foo", r.Header.Get("Authorization"))
+		require.Equal(t, "PATCH", r.Method)
+
+		w.WriteHeader(http.StatusUnauthorized)
+	}))
+	defer ts.Close()
+
+	url := strings.TrimPrefix(ts.URL, "http://")
+	host, port, err := net.SplitHostPort(url)
+	require.NoError(t, err)
+	portNum, err := strconv.Atoi(port)
+	require.NoError(t, err)
+
+	client, err := NewClient(host, portNum, "foo", false)
+	require.NoError(t, err)
+	require.NotNil(t, client)
+
+	shouldBeFalse, shouldBeNil, err := client.PatchRequest("channels", nil, nil)
+	require.ErrorIs(t, err, AuthorizationError{})
+	require.False(t, shouldBeFalse)
+	require.Nil(t, shouldBeNil)
+}
+
+func TestClient_PatchRequestReturnsGenericError(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, "/api/twitch/helix/channels/", r.URL.Path)
+		require.Equal(t, "Token foo", r.Header.Get("Authorization"))
+		require.Equal(t, "PATCH", r.Method)
+
+		w.WriteHeader(http.StatusBadRequest)
+	}))
+	defer ts.Close()
+
+	url := strings.TrimPrefix(ts.URL, "http://")
+	host, port, err := net.SplitHostPort(url)
+	require.NoError(t, err)
+	portNum, err := strconv.Atoi(port)
+	require.NoError(t, err)
+
+	client, err := NewClient(host, portNum, "foo", false)
+	require.NoError(t, err)
+	require.NotNil(t, client)
+
+	shouldBeFalse, shouldBeNil, err := client.PatchRequest("channels", nil, nil)
+	require.Error(t, err)
+	require.IsType(t, GenericError{}, err)
+	require.False(t, shouldBeFalse)
+	require.Nil(t, shouldBeNil)
+}
+
 func TestClient_ModifyChannelInformationReturnsTrue(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		require.Equal(t, "/api/twitch/helix/channels/", r.URL.Path)
