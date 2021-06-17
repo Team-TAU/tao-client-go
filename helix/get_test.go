@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestClient_GetRequestReturnsRateLimitError(t *testing.T) {
@@ -17,6 +18,7 @@ func TestClient_GetRequestReturnsRateLimitError(t *testing.T) {
 		require.Equal(t, "Token foo", r.Header.Get("Authorization"))
 		require.Equal(t, "GET", r.Method)
 
+		w.Header().Set("Ratelimit-Reset", "1623961625")
 		w.WriteHeader(http.StatusTooManyRequests)
 	}))
 	defer ts.Close()
@@ -32,7 +34,13 @@ func TestClient_GetRequestReturnsRateLimitError(t *testing.T) {
 	require.NotNil(t, client)
 
 	shouldBeNil, err := client.GetRequest("channels", nil)
-	require.ErrorIs(t, err, RateLimitError{"rate limited: received http 429"})
+	require.Error(t, err)
+	require.IsType(t, RateLimitError{}, err)
+	rlErr := err.(RateLimitError)
+	require.NotNil(t, rlErr.ResetTime())
+	require.Equal(t, 2021, rlErr.ResetTime().Year())
+	require.Equal(t, time.Month(6), rlErr.ResetTime().Month())
+	require.Equal(t, 17, rlErr.ResetTime().Day())
 	require.Nil(t, shouldBeNil)
 }
 

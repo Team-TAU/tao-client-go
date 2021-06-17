@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestClient_DeleteRequestReturnsTrue(t *testing.T) {
@@ -64,6 +65,8 @@ func TestClient_DeleteRequestReturnsRateLimitError(t *testing.T) {
 		require.Equal(t, "/api/twitch/helix/channel_points/custom_rewards/", r.URL.Path)
 		require.Equal(t, "Token foo", r.Header.Get("Authorization"))
 		require.Equal(t, "DELETE", r.Method)
+
+		w.Header().Set("Ratelimit-Reset", "1623961625")
 		w.WriteHeader(http.StatusTooManyRequests)
 	}))
 	defer ts.Close()
@@ -80,7 +83,12 @@ func TestClient_DeleteRequestReturnsRateLimitError(t *testing.T) {
 
 	deleted, err := client.DeleteRequest("channel_points/custom_rewards", nil)
 	require.Error(t, err)
-	require.IsType(t, RateLimitError{"rate limited: received http 429"}, err)
+	require.IsType(t, RateLimitError{}, err)
+	rlErr := err.(RateLimitError)
+	require.NotNil(t, rlErr.ResetTime())
+	require.Equal(t, 2021, rlErr.ResetTime().Year())
+	require.Equal(t, time.Month(6), rlErr.ResetTime().Month())
+	require.Equal(t, 17, rlErr.ResetTime().Day())
 	require.False(t, deleted)
 }
 

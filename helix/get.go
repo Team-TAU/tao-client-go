@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -44,9 +45,19 @@ func (c *Client) GetRequest(endpoint string, queryParams map[string][]string) ([
 			fmt.Sprintf("authorization error on /users, %s", string(body)),
 		}
 	} else if response.StatusCode == 429 {
-		return nil, RateLimitError{
-			"rate limited: received http 429",
+		resetEpoch := response.Header.Get("Ratelimit-Reset")
+		rlErr := RateLimitError{
+			err: "rate limited: received http 429",
 		}
+		if resetEpoch != "" {
+			epoch, err := strconv.ParseInt(resetEpoch, 10, 64)
+			if err != nil {
+				return nil, err
+			}
+			reset := time.Unix(epoch, 0)
+			rlErr.reset = &reset
+		}
+		return nil, rlErr
 	}
 	if response.StatusCode != 200 {
 		body, _ := ioutil.ReadAll(response.Body)

@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
+	"time"
 )
 
 // DeleteRequest runs a raw GET request against the twitch helix pass thru, and returns true if the delete worked.
@@ -43,9 +45,19 @@ func (c *Client) DeleteRequest(endpoint string, params map[string][]string) (boo
 	if response.StatusCode == 401 {
 		return false, AuthorizationError{}
 	} else if response.StatusCode == 429 {
-		return false, RateLimitError{
-			"rate limited: received http 429",
+		resetEpoch := response.Header.Get("Ratelimit-Reset")
+		rlErr := RateLimitError{
+			err: "rate limited: received http 429",
 		}
+		if resetEpoch != "" {
+			epoch, err := strconv.ParseInt(resetEpoch, 10, 64)
+			if err != nil {
+				return false, err
+			}
+			reset := time.Unix(epoch, 0)
+			rlErr.reset = &reset
+		}
+		return false, rlErr
 	} else {
 		body, _ := ioutil.ReadAll(response.Body)
 		err = GenericError{

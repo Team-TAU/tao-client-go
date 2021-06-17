@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -54,9 +55,19 @@ func (c *Client) PatchRequest(endpoint string, params map[string][]string, body 
 	if response.StatusCode == 401 {
 		return false, nil, AuthorizationError{}
 	} else if response.StatusCode == 429 {
-		return false, nil, RateLimitError{
-			"rate limited: received http 429",
+		resetEpoch := response.Header.Get("Ratelimit-Reset")
+		rlErr := RateLimitError{
+			err: "rate limited: received http 429",
 		}
+		if resetEpoch != "" {
+			epoch, err := strconv.ParseInt(resetEpoch, 10, 64)
+			if err != nil {
+				return false, nil, err
+			}
+			reset := time.Unix(epoch, 0)
+			rlErr.reset = &reset
+		}
+		return false, nil, rlErr
 	} else {
 		body, _ := ioutil.ReadAll(response.Body)
 		err = GenericError{
