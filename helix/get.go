@@ -43,6 +43,10 @@ func (c *Client) GetRequest(endpoint string, queryParams map[string][]string) ([
 		return nil, AuthorizationError{
 			fmt.Sprintf("authorization error on /users, %s", string(body)),
 		}
+	} else if response.StatusCode == 429 {
+		return nil, RateLimitError{
+			"rate limited: received http 429",
+		}
 	}
 	if response.StatusCode != 200 {
 		body, _ := ioutil.ReadAll(response.Body)

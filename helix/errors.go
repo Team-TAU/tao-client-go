@@ -19,6 +19,7 @@ func (b BadRequestError) Error() string {
 	return b.err
 }
 
+// GenericError represents a non-specific error, sorta a catch all.
 type GenericError struct {
 	err  string
 	body []byte
@@ -35,4 +36,13 @@ func (g GenericError) Body() string {
 
 func (g GenericError) StatusCode() int {
 	return g.code
+}
+
+// RateLimitError occurs when a twitch rate limits the request.
+type RateLimitError struct {
+	err string
+}
+
+func (r RateLimitError) Error() string {
+	return r.err
 }

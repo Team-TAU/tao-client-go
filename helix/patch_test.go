@@ -40,6 +40,32 @@ func TestClient_PatchRequestReturnsAuthError(t *testing.T) {
 	require.Nil(t, shouldBeNil)
 }
 
+func TestClient_PatchRequestReturnsRateLimitError(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, "/api/twitch/helix/channels/", r.URL.Path)
+		require.Equal(t, "Token foo", r.Header.Get("Authorization"))
+		require.Equal(t, "PATCH", r.Method)
+
+		w.WriteHeader(http.StatusTooManyRequests)
+	}))
+	defer ts.Close()
+
+	url := strings.TrimPrefix(ts.URL, "http://")
+	host, port, err := net.SplitHostPort(url)
+	require.NoError(t, err)
+	portNum, err := strconv.Atoi(port)
+	require.NoError(t, err)
+
+	client, err := NewClient(host, portNum, "foo", false)
+	require.NoError(t, err)
+	require.NotNil(t, client)
+
+	shouldBeFalse, shouldBeNil, err := client.PatchRequest("channels", nil, nil)
+	require.ErrorIs(t, err, RateLimitError{"rate limited: received http 429"})
+	require.False(t, shouldBeFalse)
+	require.Nil(t, shouldBeNil)
+}
+
 func TestClient_PatchRequestReturnsGenericError(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		require.Equal(t, "/api/twitch/helix/channels/", r.URL.Path)

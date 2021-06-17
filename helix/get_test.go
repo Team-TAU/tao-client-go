@@ -11,6 +11,31 @@ import (
 	"testing"
 )
 
+func TestClient_GetRequestReturnsRateLimitError(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, "/api/twitch/helix/channels/", r.URL.Path)
+		require.Equal(t, "Token foo", r.Header.Get("Authorization"))
+		require.Equal(t, "GET", r.Method)
+
+		w.WriteHeader(http.StatusTooManyRequests)
+	}))
+	defer ts.Close()
+
+	url := strings.TrimPrefix(ts.URL, "http://")
+	host, port, err := net.SplitHostPort(url)
+	require.NoError(t, err)
+	portNum, err := strconv.Atoi(port)
+	require.NoError(t, err)
+
+	client, err := NewClient(host, portNum, "foo", false)
+	require.NoError(t, err)
+	require.NotNil(t, client)
+
+	shouldBeNil, err := client.GetRequest("channels", nil)
+	require.ErrorIs(t, err, RateLimitError{"rate limited: received http 429"})
+	require.Nil(t, shouldBeNil)
+}
+
 func TestClient_GetTwitchUsersReturnsError(t *testing.T) {
 	client := Client{}
 	users := make([]string, 101)

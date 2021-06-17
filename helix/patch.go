@@ -53,6 +53,10 @@ func (c *Client) PatchRequest(endpoint string, params map[string][]string, body 
 	}
 	if response.StatusCode == 401 {
 		return false, nil, AuthorizationError{}
+	} else if response.StatusCode == 429 {
+		return false, nil, RateLimitError{
+			"rate limited: received http 429",
+		}
 	} else {
 		body, _ := ioutil.ReadAll(response.Body)
 		err = GenericError{
