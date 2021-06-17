@@ -151,3 +151,29 @@ func (c *Client) DeleteVideos(IDs []string) (bool, error) {
 
 	return c.DeleteRequest("videos", params)
 }
+
+// DeleteChannelStreamScheduleSegment makes an api call to https://dev.twitch.tv/docs/api/reference#delete-channel-stream-schedule-segment, and formats the data.
+func (c *Client) DeleteChannelStreamScheduleSegment(broadcasterID, ID string) (bool, error) {
+	broadcasterID = strings.TrimSpace(broadcasterID)
+	ID = strings.TrimSpace(ID)
+
+	broadcasterID = strings.TrimSpace(broadcasterID)
+	ID = strings.TrimSpace(ID)
+	if broadcasterID == "" {
+		return false, BadRequestError{
+			"invalid request, broadcaster can't be blank",
+		}
+	}
+	if ID == "" {
+		return false, BadRequestError{
+			"invalid request, ID can't be blank",
+		}
+	}
+
+	params := map[string][]string{
+		"broadcaster_id": {broadcasterID},
+		"id":             {ID},
+	}
+
+	return c.DeleteRequest("schedule/segment", params)
+}

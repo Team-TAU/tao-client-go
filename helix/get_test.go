@@ -3042,3 +3042,115 @@ func TestClient_GetWebhookSubscriptionsReturnsError(t *testing.T) {
 	require.ErrorIs(t, err, BadRequestError{"invalid request, count can't be negative"})
 	require.Nil(t, subs)
 }
+
+func TestClient_GetChannelStreamScheduleReturns200(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, "/api/twitch/helix/schedule/", r.URL.Path)
+		require.Equal(t, "Token foo", r.Header.Get("Authorization"))
+		require.Equal(t, "141981764", r.URL.Query().Get("broadcaster_id"))
+		w.WriteHeader(http.StatusOK)
+		_, err := fmt.Fprint(w, "{\"data\":{\"segments\":[{\"id\":\"eyJzZWdtZW50SUQiOiJlNGFjYzcyNC0zNzFmLTQwMmMtODFjYS0yM2FkYTc5NzU5ZDQiLCJpc29ZZWFyIjoyMDIxLCJpc29XZWVrIjoyNn0=\",\"start_time\":\"2021-07-01T18:00:00Z\",\"end_time\":\"2021-07-01T19:00:00Z\",\"title\":\"TwitchDev Monthly Update // July 1, 2021\",\"canceled_until\":null,\"category\":{\"id\":\"509670\",\"name\":\"Science & Technology\"},\"is_recurring\":false}],\"broadcaster_id\":\"141981764\",\"broadcaster_name\":\"TwitchDev\",\"broadcaster_login\":\"twitchdev\",\"vacation\":null},\"pagination\":{}}")
+		require.NoError(t, err)
+	}))
+	defer ts.Close()
+
+	url := strings.TrimPrefix(ts.URL, "http://")
+	host, port, err := net.SplitHostPort(url)
+	require.NoError(t, err)
+	portNum, err := strconv.Atoi(port)
+	require.NoError(t, err)
+
+	client, err := NewClient(host, portNum, "foo", false)
+	require.NoError(t, err)
+	require.NotNil(t, client)
+
+	schedule, err := client.GetChannelStreamSchedule("141981764", nil, nil, 0, 0, "")
+	require.NoError(t, err)
+	require.NotNil(t, schedule)
+	require.NotNil(t, schedule.Pagination)
+	require.Zero(t, schedule.Pagination.Cursor)
+	require.Equal(t, "141981764", schedule.Data.BroadcasterId)
+	require.Equal(t, "TwitchDev", schedule.Data.BroadcasterName)
+	require.Equal(t, "twitchdev", schedule.Data.BroadcasterLogin)
+	require.Nil(t, schedule.Data.Vacation)
+	require.Len(t, schedule.Data.Segments, 1)
+	require.Nil(t, schedule.Data.Segments[0].CanceledUntil)
+	require.Equal(t, "eyJzZWdtZW50SUQiOiJlNGFjYzcyNC0zNzFmLTQwMmMtODFjYS0yM2FkYTc5NzU5ZDQiLCJpc29ZZWFyIjoyMDIxLCJpc29XZWVrIjoyNn0=", schedule.Data.Segments[0].Id)
+	require.Equal(t, 2021, schedule.Data.Segments[0].StartTime.Year())
+	require.Equal(t, 2021, schedule.Data.Segments[0].EndTime.Year())
+	require.Equal(t, "TwitchDev Monthly Update // July 1, 2021", schedule.Data.Segments[0].Title)
+	require.Equal(t, "509670", schedule.Data.Segments[0].Category.Id)
+	require.Equal(t, "Science & Technology", schedule.Data.Segments[0].Category.Name)
+	require.False(t, schedule.Data.Segments[0].IsRecurring)
+}
+
+func TestClient_GetChannelStreamScheduleReturnsError(t *testing.T) {
+	client := Client{}
+
+	schedule, err := client.GetChannelStreamSchedule("", nil, nil, 0, 0, "")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.Nil(t, schedule)
+
+	schedule, err = client.GetChannelStreamSchedule("    ", nil, nil, 0, 0, "")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.Nil(t, schedule)
+
+	schedule, err = client.GetChannelStreamSchedule("		", nil, nil, 0, 0, "")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.Nil(t, schedule)
+
+	schedule, err = client.GetChannelStreamSchedule("123", make([]string, 101), nil, 0, 0, "")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, maximum of 100 ids, but you supplied 101"})
+	require.Nil(t, schedule)
+
+	schedule, err = client.GetChannelStreamSchedule("123", nil, nil, 0, 26, "")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, count maximum value is 25, but you supplied 26"})
+	require.Nil(t, schedule)
+
+	schedule, err = client.GetChannelStreamSchedule("123", nil, nil, 0, -1, "")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, count can't be negative"})
+	require.Nil(t, schedule)
+}
+
+func TestClient_GetChannelStreamScheduleAsICalReturns200(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, "/api/twitch/helix/schedule/icalendar/", r.URL.Path)
+		require.Equal(t, "Token foo", r.Header.Get("Authorization"))
+		require.Equal(t, "141981764", r.URL.Query().Get("broadcaster_id"))
+		w.WriteHeader(http.StatusOK)
+		_, err := fmt.Fprint(w, "BEGIN:VCALENDAR\nPRODID:-//twitch.tv//StreamSchedule//1.0\nVERSION:2.0\nCALSCALE:GREGORIAN\nREFRESH-INTERVAL;VALUE=DURATION:PT1H\nNAME:TwitchDev\nBEGIN:VEVENT\nUID:e4acc724-371f-402c-81ca-23ada79759d4\nDTSTAMP:20210323T040131Z\nDTSTART;TZID=/America/New_York:20210701T140000\nDTEND;TZID=/America/New_York:20210701T150000\nSUMMARY:TwitchDev Monthly Update // July 1, 2021\nDESCRIPTION:Science & Technology.\nCATEGORIES:Science & Technology\nEND:VEVENT\nEND:VCALENDAR%")
+		require.NoError(t, err)
+	}))
+	defer ts.Close()
+
+	url := strings.TrimPrefix(ts.URL, "http://")
+	host, port, err := net.SplitHostPort(url)
+	require.NoError(t, err)
+	portNum, err := strconv.Atoi(port)
+	require.NoError(t, err)
+
+	client, err := NewClient(host, portNum, "foo", false)
+	require.NoError(t, err)
+	require.NotNil(t, client)
+
+	schedule, err := client.GetChannelStreamScheduleAsICal("141981764")
+	require.NoError(t, err)
+	require.NotNil(t, schedule)
+	require.Contains(t, string(schedule), "e4acc724-371f-402c-81ca-23ada79759d4")
+}
+
+func TestClient_GetChannelStreamScheduleAsICalReturnsError(t *testing.T) {
+	client := Client{}
+
+	schedule, err := client.GetChannelStreamScheduleAsICal("")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.Nil(t, schedule)
+
+	schedule, err = client.GetChannelStreamScheduleAsICal("    ")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.Nil(t, schedule)
+
+	schedule, err = client.GetChannelStreamScheduleAsICal("		")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.Nil(t, schedule)
+}

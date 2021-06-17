@@ -1779,3 +1779,76 @@ func (c *Client) GetWebhookSubscriptions(after string, count int) (*WebhookSubsc
 
 	return subscription, nil
 }
+
+// GetChannelStreamSchedule makes an api call to https://dev.twitch.tv/docs/api/reference#get-channel-stream-schedule, and formats the data.
+func (c *Client) GetChannelStreamSchedule(broadcasterID string, IDs []string, startTime *time.Time,
+	utcOffset, count int, after string) (*ChannelStreamSchedule, error) {
+	broadcasterID = strings.TrimSpace(broadcasterID)
+	if broadcasterID == "" {
+		return nil, BadRequestError{
+			"invalid request, broadcast can't be blank",
+		}
+	}
+	if len(IDs) > 100 {
+		return nil, BadRequestError{
+			fmt.Sprintf("invalid request, maximum of 100 ids, but you supplied %d", len(IDs)),
+		}
+	}
+	if count > 25 {
+		return nil, BadRequestError{
+			fmt.Sprintf("invalid request, count maximum value is 25, but you supplied %d", count),
+		}
+	} else if count < 0 {
+		return nil, BadRequestError{
+			"invalid request, count can't be negative",
+		}
+	}
+
+	params := make(map[string][]string)
+	params["broadcaster_id"] = []string{broadcasterID}
+	if len(IDs) > 0 {
+		params["id"] = IDs
+	}
+	if startTime != nil {
+		params["start_time"] = []string{startTime.Format(time.RFC3339)}
+	}
+	if utcOffset != 0 {
+		params["utc_offset"] = []string{fmt.Sprintf("%d", utcOffset)}
+	}
+	if count != 0 {
+		params["first"] = []string{fmt.Sprintf("%d", count)}
+	}
+	if after != "" {
+		params["after"] = []string{after}
+	}
+
+	body, err := c.GetRequest("schedule", params)
+	if err != nil {
+		return nil, err
+	}
+
+	schedule := new(ChannelStreamSchedule)
+	err = json.Unmarshal(body, schedule)
+	if err != nil {
+		return nil, err
+	}
+
+	return schedule, nil
+}
+
+// GetChannelStreamScheduleAsICal gets the iCal format schedule for a stream.  This is returned as a []byte to allow
+//for use with your iCal library of choice.  See https://dev.twitch.tv/docs/api/reference#get-channel-icalendar.
+func (c *Client) GetChannelStreamScheduleAsICal(broadcasterID string) ([]byte, error) {
+	broadcasterID = strings.TrimSpace(broadcasterID)
+	if broadcasterID == "" {
+		return nil, BadRequestError{
+			"invalid request, broadcast can't be blank",
+		}
+	}
+
+	params := map[string][]string{
+		"broadcaster_id": {broadcasterID},
+	}
+
+	return c.GetRequest("schedule/icalendar", params)
+}

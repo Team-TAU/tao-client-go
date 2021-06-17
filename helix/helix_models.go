@@ -739,3 +739,30 @@ type WebhookSubscriptions struct {
 	} `json:"data"`
 	Pagination *TwitchPagination `json:"pagination"`
 }
+
+type Vacation struct {
+	StartTime time.Time `json:"start_time"`
+	EndTime   time.Time `json:"end_time"`
+}
+
+type ChannelStreamSchedule struct {
+	Data struct {
+		Segments []struct {
+			Id            string     `json:"id"`
+			StartTime     time.Time  `json:"start_time"`
+			EndTime       time.Time  `json:"end_time"`
+			Title         string     `json:"title"`
+			CanceledUntil *time.Time `json:"canceled_until"`
+			Category      struct {
+				Id   string `json:"id"`
+				Name string `json:"name"`
+			} `json:"category"`
+			IsRecurring bool `json:"is_recurring"`
+		} `json:"segments"`
+		BroadcasterId    string    `json:"broadcaster_id"`
+		BroadcasterName  string    `json:"broadcaster_name"`
+		BroadcasterLogin string    `json:"broadcaster_login"`
+		Vacation         *Vacation `json:"vacation"`
+	} `json:"data"`
+	Pagination *TwitchPagination `json:"pagination"`
+}

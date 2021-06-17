@@ -302,3 +302,57 @@ func TestClient_DeleteVideosReturnsError(t *testing.T) {
 	require.ErrorIs(t, err, BadRequestError{"invalid request, maximum number of IDs is 5 but you supplied 6"})
 	require.False(t, deleted)
 }
+
+func TestClient_DeleteChannelStreamScheduleSegmentReturnsTrue(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, "/api/twitch/helix/schedule/segment/", r.URL.Path)
+		require.Equal(t, "Token foo", r.Header.Get("Authorization"))
+		require.Equal(t, "141981764", r.URL.Query().Get("broadcaster_id"))
+		require.Equal(t, "eyJzZWdtZW50SUQiOiI4Y2EwN2E2NC0xYTZkLTRjYWItYWE5Ni0xNjIyYzNjYWUzZDkiLCJpc29ZZWFyIjoyMDIxLCJpc29XZWVrIjoyMX0=", r.URL.Query().Get("id"))
+		require.Equal(t, "DELETE", r.Method)
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer ts.Close()
+
+	url := strings.TrimPrefix(ts.URL, "http://")
+	host, port, err := net.SplitHostPort(url)
+	require.NoError(t, err)
+	portNum, err := strconv.Atoi(port)
+	require.NoError(t, err)
+
+	client, err := NewClient(host, portNum, "foo", false)
+	require.NoError(t, err)
+	require.NotNil(t, client)
+
+	deleted, err := client.DeleteChannelStreamScheduleSegment("141981764", "eyJzZWdtZW50SUQiOiI4Y2EwN2E2NC0xYTZkLTRjYWItYWE5Ni0xNjIyYzNjYWUzZDkiLCJpc29ZZWFyIjoyMDIxLCJpc29XZWVrIjoyMX0=")
+	require.NoError(t, err)
+	require.True(t, deleted)
+}
+
+func TestClient_DeleteChannelStreamScheduleSegmentReturnsError(t *testing.T) {
+	client := Client{}
+
+	deleted, err := client.DeleteChannelStreamScheduleSegment("", "123")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcaster can't be blank"})
+	require.False(t, deleted)
+
+	deleted, err = client.DeleteChannelStreamScheduleSegment("    ", "123")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcaster can't be blank"})
+	require.False(t, deleted)
+
+	deleted, err = client.DeleteChannelStreamScheduleSegment("		", "123")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcaster can't be blank"})
+	require.False(t, deleted)
+
+	deleted, err = client.DeleteChannelStreamScheduleSegment("123", "")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, ID can't be blank"})
+	require.False(t, deleted)
+
+	deleted, err = client.DeleteChannelStreamScheduleSegment("123", "    ")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, ID can't be blank"})
+	require.False(t, deleted)
+
+	deleted, err = client.DeleteChannelStreamScheduleSegment("123", "	")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, ID can't be blank"})
+	require.False(t, deleted)
+}
