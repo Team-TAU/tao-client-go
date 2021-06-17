@@ -11,16 +11,6 @@ import (
 	"testing"
 )
 
-func TestNewClientReturnsClient(t *testing.T) {
-	client, err := NewClient("tau.example.com", 443, "abcdefg", true)
-	require.NoError(t, err)
-	require.NotNil(t, client)
-	require.Equal(t, "tau.example.com", client.hostname)
-	require.Equal(t, 443, client.port)
-	require.Equal(t, "abcdefg", client.token)
-	require.True(t, client.hasSSL)
-}
-
 func TestClient_GetTwitchUsersReturnsError(t *testing.T) {
 	client := Client{}
 	users := make([]string, 101)
@@ -535,7 +525,7 @@ func TestClient_GetCustomRewardsReturns200(t *testing.T) {
 	data := rewards.Data[0]
 	require.Equal(t, "torpedo09", data.BroadcasterName)
 	require.Equal(t, "274637212", data.BroadcasterId)
-	require.Equal(t, "92af127c-7326-4483-a52b-b0da0be61c01", data.Id)
+	require.Equal(t, "92af127c-7326-4483-a52b-b0da0be61c01", data.ID)
 	require.Nil(t, data.Image)
 	require.Equal(t, "#00E5CB", data.BackgroundColor)
 	require.True(t, data.IsEnabled)

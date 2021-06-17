@@ -141,7 +141,7 @@ type CustomRewards struct {
 		BroadcasterName     string             `json:"broadcaster_name"`
 		BroadcasterLogin    string             `json:"broadcaster_login"`
 		BroadcasterId       string             `json:"broadcaster_id"`
-		Id                  string             `json:"id"`
+		ID                  string             `json:"id"`
 		Image               *CustomRewardImage `json:"image"`
 		BackgroundColor     string             `json:"background_color"`
 		IsEnabled           bool               `json:"is_enabled"`
@@ -412,15 +412,24 @@ type Polls struct {
 			ChannelPointsVotes int    `json:"channel_points_votes"`
 			BitsVotes          int    `json:"bits_votes"`
 		} `json:"choices"`
-		BitsVotingEnabled          bool      `json:"bits_voting_enabled"`
-		BitsPerVote                int       `json:"bits_per_vote"`
-		ChannelPointsVotingEnabled bool      `json:"channel_points_voting_enabled"`
-		ChannelPointsPerVote       int       `json:"channel_points_per_vote"`
-		Status                     string    `json:"status"`
-		Duration                   int       `json:"duration"`
-		StartedAt                  time.Time `json:"started_at"`
+		BitsVotingEnabled          bool       `json:"bits_voting_enabled"`
+		BitsPerVote                int        `json:"bits_per_vote"`
+		ChannelPointsVotingEnabled bool       `json:"channel_points_voting_enabled"`
+		ChannelPointsPerVote       int        `json:"channel_points_per_vote"`
+		Status                     string     `json:"status"`
+		Duration                   int        `json:"duration"`
+		StartedAt                  time.Time  `json:"started_at"`
+		EndedAt                    *time.Time `json:"ended_at"`
 	} `json:"data"`
 	Pagination *TwitchPagination `json:"pagination"`
+}
+
+type TopPredictors struct {
+	UserID            string `json:"id"`
+	UserName          string `json:"name"`
+	UserLogin         string `json:"login"`
+	ChannelPointsUsed int    `json:"channel_points_used"`
+	ChannelPointsWon  int    `json:"channel_points_won"`
 }
 
 // Predictions represents the response from Get Predictions, see https://dev.twitch.tv/docs/api/reference#get-predictions
@@ -433,12 +442,12 @@ type Predictions struct {
 		Title            string `json:"title"`
 		WinningOutcomeId string `json:"winning_outcome_id"`
 		Outcomes         []struct {
-			ID            string      `json:"id"`
-			Title         string      `json:"title"`
-			Users         int         `json:"users"`
-			ChannelPoints int         `json:"channel_points"`
-			TopPredictors interface{} `json:"top_predictors"`
-			Color         string      `json:"color"`
+			ID            string           `json:"id"`
+			Title         string           `json:"title"`
+			Users         int              `json:"users"`
+			ChannelPoints int              `json:"channel_points"`
+			TopPredictors []*TopPredictors `json:"top_predictors"`
+			Color         string           `json:"color"`
 		} `json:"outcomes"`
 		PredictionWindow int        `json:"prediction_window"`
 		Status           string     `json:"status"`
