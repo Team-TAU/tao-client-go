@@ -27,3 +27,25 @@ type StreamScheduleSegmentUpdate struct {
 	CategoryID  *string    `json:"category_id,omitempty"`
 	Title       *string    `json:"title,omitempty"`
 }
+
+type Outcome struct {
+	Title string `json:"title"`
+}
+
+type CreatePoll struct {
+	BroadcasterID              string    `json:"broadcaster_id"`
+	Title                      string    `json:"title"`
+	Choices                    []Outcome `json:"choices"`
+	Duration                   int       `json:"duration"`
+	BitsVotingEnabled          *bool     `json:"bits_voting_enabled,omitempty"`
+	BitsPerVote                *int      `json:"bits_per_vote,omitempty"`
+	ChannelPointsVotingEnabled *bool     `json:"channel_points_voting_enabled,omitempty"`
+	ChannelPointsPerVote       *int      `json:"channel_points_per_vote,omitempty"`
+}
+
+type CreatePrediction struct {
+	BroadcasterId    string    `json:"broadcaster_id"`
+	Title            string    `json:"title"`
+	Choices          []Outcome `json:"outcomes"`
+	PredictionWindow int       `json:"prediction_window"`
+}

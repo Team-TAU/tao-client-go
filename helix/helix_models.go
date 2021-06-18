@@ -757,7 +757,7 @@ type Vacation struct {
 type ChannelStreamSchedule struct {
 	Data struct {
 		Segments []struct {
-			Id            string     `json:"id"`
+			ID            string     `json:"id"`
 			StartTime     time.Time  `json:"start_time"`
 			EndTime       time.Time  `json:"end_time"`
 			Title         string     `json:"title"`

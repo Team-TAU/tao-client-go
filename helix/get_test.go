@@ -3098,7 +3098,7 @@ func TestClient_GetChannelStreamScheduleReturns200(t *testing.T) {
 	require.Nil(t, schedule.Data.Vacation)
 	require.Len(t, schedule.Data.Segments, 1)
 	require.Nil(t, schedule.Data.Segments[0].CanceledUntil)
-	require.Equal(t, "eyJzZWdtZW50SUQiOiJlNGFjYzcyNC0zNzFmLTQwMmMtODFjYS0yM2FkYTc5NzU5ZDQiLCJpc29ZZWFyIjoyMDIxLCJpc29XZWVrIjoyNn0=", schedule.Data.Segments[0].Id)
+	require.Equal(t, "eyJzZWdtZW50SUQiOiJlNGFjYzcyNC0zNzFmLTQwMmMtODFjYS0yM2FkYTc5NzU5ZDQiLCJpc29ZZWFyIjoyMDIxLCJpc29XZWVrIjoyNn0=", schedule.Data.Segments[0].ID)
 	require.Equal(t, 2021, schedule.Data.Segments[0].StartTime.Year())
 	require.Equal(t, 2021, schedule.Data.Segments[0].EndTime.Year())
 	require.Equal(t, "TwitchDev Monthly Update // July 1, 2021", schedule.Data.Segments[0].Title)

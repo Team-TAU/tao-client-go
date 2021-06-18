@@ -490,7 +490,7 @@ func TestClient_UpdateChannelStreamScheduleSegmentReturnsTrue(t *testing.T) {
 	require.Nil(t, segment.Data.Vacation)
 
 	segmentData := segment.Data.Segments[0]
-	require.Equal(t, "eyJzZWdtZW50SUQiOiJlNGFjYzcyNC0zNzFmLTQwMmMtODFjYS0yM2FkYTc5NzU5ZDQiLCJpc29ZZWFyIjoyMDIxLCJpc29XZWVrIjoyNn0=", segmentData.Id)
+	require.Equal(t, "eyJzZWdtZW50SUQiOiJlNGFjYzcyNC0zNzFmLTQwMmMtODFjYS0yM2FkYTc5NzU5ZDQiLCJpc29ZZWFyIjoyMDIxLCJpc29XZWVrIjoyNn0=", segmentData.ID)
 	require.Equal(t, 2021, segmentData.StartTime.Year())
 	require.Equal(t, 2021, segmentData.EndTime.Year())
 	require.Equal(t, "TwitchDev Monthly Update // July 1, 2021", segmentData.Title)
