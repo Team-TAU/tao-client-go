@@ -778,3 +778,12 @@ type ChannelStreamSchedule struct {
 	} `json:"data"`
 	Pagination *TwitchPagination `json:"pagination"`
 }
+
+// Commercial represents the response when you start a commercial, see https://dev.twitch.tv/docs/api/reference#start-commercial
+type Commercial struct {
+	Data []struct {
+		Length     int    `json:"length"`
+		Message    string `json:"message"`
+		RetryAfter int    `json:"retry_after"`
+	} `json:"data"`
+}

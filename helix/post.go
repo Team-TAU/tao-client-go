@@ -278,3 +278,57 @@ func (c *Client) CreateUserFollows(fromID, toID string, allowNotifications bool)
 
 	return true, nil
 }
+
+func (c *Client) StartCommercial(broadcasterID string, length int) (*Commercial, error) {
+	type commercial struct {
+		BroadcasterID string `json:"broadcaster_id"`
+		Length        int    `json:"length"`
+	}
+	broadcasterID = strings.TrimSpace(broadcasterID)
+	if broadcasterID == "" {
+		return nil, BadRequestError{
+			"invalid request, from id can't be blank",
+		}
+	}
+
+	commercialData := commercial{
+		BroadcasterID: broadcasterID,
+	}
+
+	switch length {
+	case 30:
+		fallthrough
+	case 60:
+		fallthrough
+	case 90:
+		fallthrough
+	case 120:
+		fallthrough
+	case 150:
+		fallthrough
+	case 180:
+		commercialData.Length = length
+	default:
+		return nil, BadRequestError{
+			"invalid request, valid length values are 30, 60, 90, 120, 150, 180",
+		}
+	}
+
+	body, err := json.Marshal(commercialData)
+	if err != nil {
+		return nil, err
+	}
+
+	responseBody, err := c.PostRequest("channels/commercial", nil, body)
+	if err != nil {
+		return nil, err
+	}
+
+	response := new(Commercial)
+	err = json.Unmarshal(responseBody, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}

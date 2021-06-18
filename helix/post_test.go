@@ -564,3 +564,63 @@ func TestClient_CreateUserFollowsReturnsError(t *testing.T) {
 	require.ErrorIs(t, err, BadRequestError{"invalid request, to id can't be blank"})
 	require.False(t, followed)
 }
+
+func TestClient_StartCommercialReturns200(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, "/api/twitch/helix/channels/commercial/", r.URL.Path)
+		require.Equal(t, "Token foo", r.Header.Get("Authorization"))
+		require.Equal(t, "POST", r.Method)
+
+		body, err := ioutil.ReadAll(r.Body)
+		require.NoError(t, err)
+
+		bodyMap := make(map[string]interface{})
+		err = json.Unmarshal(body, &bodyMap)
+		require.NoError(t, err)
+		require.Equal(t, "41245072", bodyMap["broadcaster_id"])
+		require.Equal(t, float64(60), bodyMap["length"])
+
+		w.WriteHeader(http.StatusOK)
+		_, err = fmt.Fprint(w, "{\"data\":[{\"length\":60,\"message\":\"\",\"retry_after\":480}]}")
+		require.NoError(t, err)
+	}))
+	defer ts.Close()
+
+	url := strings.TrimPrefix(ts.URL, "http://")
+	host, port, err := net.SplitHostPort(url)
+	require.NoError(t, err)
+	portNum, err := strconv.Atoi(port)
+	require.NoError(t, err)
+
+	client, err := NewClient(host, portNum, "foo", false)
+	require.NoError(t, err)
+	require.NotNil(t, client)
+
+	commercial, err := client.StartCommercial("41245072", 60)
+	require.NoError(t, err)
+	require.NotNil(t, commercial)
+	require.Len(t, commercial.Data, 1)
+	require.Equal(t, "", commercial.Data[0].Message)
+	require.Equal(t, 60, commercial.Data[0].Length)
+	require.Equal(t, 480, commercial.Data[0].RetryAfter)
+}
+
+func TestClient_StartCommercialReturnsError(t *testing.T) {
+	client := Client{}
+
+	commercial, err := client.StartCommercial("", 0)
+	require.ErrorIs(t, err, BadRequestError{"invalid request, from id can't be blank"})
+	require.Nil(t, commercial)
+
+	commercial, err = client.StartCommercial("    ", 0)
+	require.ErrorIs(t, err, BadRequestError{"invalid request, from id can't be blank"})
+	require.Nil(t, commercial)
+
+	commercial, err = client.StartCommercial("		", 0)
+	require.ErrorIs(t, err, BadRequestError{"invalid request, from id can't be blank"})
+	require.Nil(t, commercial)
+
+	commercial, err = client.StartCommercial("123", 0)
+	require.Equal(t, err, BadRequestError{"invalid request, valid length values are 30, 60, 90, 120, 150, 180"})
+	require.Nil(t, commercial)
+}
