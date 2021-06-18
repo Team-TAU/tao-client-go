@@ -1,12 +1,8 @@
 package helix
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -14,69 +10,11 @@ import (
 // PatchRequest handles generic PATCH requests to twitch's API, leveraged internally as well as allows you
 //to make raw requests in case an update to the API comes out and the library hasn't been updated yet.
 func (c *Client) PatchRequest(endpoint string, params map[string][]string, body []byte) (bool, []byte, error) {
-	protocol := "http"
-	if c.hasSSL {
-		protocol = "https"
-	}
-	endpointURL := fmt.Sprintf("%s://%s:%d/api/twitch/helix/%s/", protocol, c.hostname, c.port, endpoint)
-	httpClient := &http.Client{}
-	buffer := bytes.NewBuffer(body)
-	request, err := http.NewRequest("PATCH", endpointURL, buffer)
+	response, err := c.helixRequest(endpoint, params, body, "PATCH")
 	if err != nil {
 		return false, nil, err
 	}
-	request.Header.Add("Authorization", fmt.Sprintf("Token %s", c.token))
-	request.Header.Add("Content-Type", "application/json")
-	_, err = request.URL.Parse(endpointURL)
-	if err != nil {
-		return false, nil, err
-	}
-
-	q := request.URL.Query()
-	for key, values := range params {
-		for _, item := range values {
-			q.Add(key, item)
-		}
-	}
-	request.URL.RawQuery = q.Encode()
-
-	response, err := httpClient.Do(request)
-	if err != nil {
-		return false, nil, err
-	}
-	if response.StatusCode >= 200 && response.StatusCode < 300 {
-		if response.StatusCode == 204 {
-			return true, nil, nil
-		}
-		body, err := ioutil.ReadAll(response.Body)
-		return true, body, err
-
-	}
-	if response.StatusCode == 401 {
-		return false, nil, AuthorizationError{}
-	} else if response.StatusCode == 429 {
-		resetEpoch := response.Header.Get("Ratelimit-Reset")
-		rlErr := RateLimitError{
-			err: "rate limited: received http 429",
-		}
-		if resetEpoch != "" {
-			epoch, err := strconv.ParseInt(resetEpoch, 10, 64)
-			if err != nil {
-				return false, nil, err
-			}
-			reset := time.Unix(epoch, 0)
-			rlErr.reset = &reset
-		}
-		return false, nil, rlErr
-	} else {
-		body, _ := ioutil.ReadAll(response.Body)
-		err = GenericError{
-			err:  fmt.Sprintf("response code %d: %s", response.StatusCode, body),
-			body: body,
-			code: response.StatusCode,
-		}
-		return false, nil, err
-	}
+	return true, response, err
 }
 
 // ModifyChannelInformation updates the channel information based on https://dev.twitch.tv/docs/api/reference#modify-channel-information.

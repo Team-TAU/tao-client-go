@@ -1,78 +1,15 @@
 package helix
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"strconv"
 	"strings"
-	"time"
 )
 
 // PostRequest handles generic POST requests to twitch's API, leveraged internally as well as allows you
 //to make raw requests in case an update to the API comes out and the library hasn't been updated yet.
 func (c *Client) PostRequest(endpoint string, params map[string][]string, body []byte) ([]byte, error) {
-	protocol := "http"
-	if c.hasSSL {
-		protocol = "https"
-	}
-	endpointURL := fmt.Sprintf("%s://%s:%d/api/twitch/helix/%s/", protocol, c.hostname, c.port, endpoint)
-	httpClient := &http.Client{}
-	buffer := bytes.NewBuffer(body)
-	request, err := http.NewRequest("POST", endpointURL, buffer)
-	if err != nil {
-		return nil, err
-	}
-	request.Header.Add("Authorization", fmt.Sprintf("Token %s", c.token))
-	request.Header.Add("Content-Type", "application/json")
-	_, err = request.URL.Parse(endpointURL)
-	if err != nil {
-		return nil, err
-	}
-
-	q := request.URL.Query()
-	for key, values := range params {
-		for _, item := range values {
-			q.Add(key, item)
-		}
-	}
-	request.URL.RawQuery = q.Encode()
-
-	response, err := httpClient.Do(request)
-	if err != nil {
-		return nil, err
-	}
-	if response.StatusCode >= 200 && response.StatusCode < 300 {
-		body, err := ioutil.ReadAll(response.Body)
-		return body, err
-	}
-	if response.StatusCode == 401 {
-		return nil, AuthorizationError{}
-	} else if response.StatusCode == 429 {
-		resetEpoch := response.Header.Get("Ratelimit-Reset")
-		rlErr := RateLimitError{
-			err: "rate limited: received http 429",
-		}
-		if resetEpoch != "" {
-			epoch, err := strconv.ParseInt(resetEpoch, 10, 64)
-			if err != nil {
-				return nil, err
-			}
-			reset := time.Unix(epoch, 0)
-			rlErr.reset = &reset
-		}
-		return nil, rlErr
-	} else {
-		body, _ := ioutil.ReadAll(response.Body)
-		err = GenericError{
-			err:  fmt.Sprintf("response code %d: %s", response.StatusCode, body),
-			body: body,
-			code: response.StatusCode,
-		}
-		return nil, err
-	}
+	return c.helixRequest(endpoint, params, body, "POST")
 }
 
 // CreateCustomReward is used to create custom channel point rewards, see https://dev.twitch.tv/docs/api/reference#create-custom-rewards.

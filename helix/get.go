@@ -3,72 +3,13 @@ package helix
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"strconv"
 	"strings"
 	"time"
 )
 
 // GetRequest runs a raw GET request against the twitch helix pass thru, and returns the []byte of the data.
 func (c *Client) GetRequest(endpoint string, queryParams map[string][]string) ([]byte, error) {
-	protocol := "http"
-	if c.hasSSL {
-		protocol = "https"
-	}
-	endpointURL := fmt.Sprintf("%s://%s:%d/api/twitch/helix/%s/", protocol, c.hostname, c.port, endpoint)
-	httpClient := &http.Client{}
-	request, err := http.NewRequest("GET", endpointURL, nil)
-	if err != nil {
-		return nil, err
-	}
-	request.Header.Add("Authorization", fmt.Sprintf("Token %s", c.token))
-	_, err = request.URL.Parse(endpointURL)
-	if err != nil {
-		return nil, err
-	}
-	q := request.URL.Query()
-	for key, values := range queryParams {
-		for _, item := range values {
-			q.Add(key, item)
-		}
-	}
-	request.URL.RawQuery = q.Encode()
-
-	response, err := httpClient.Do(request)
-	if err != nil {
-		return nil, err
-	}
-	if response.StatusCode == 401 {
-		body, _ := ioutil.ReadAll(response.Body)
-		return nil, AuthorizationError{
-			fmt.Sprintf("authorization error on /users, %s", string(body)),
-		}
-	} else if response.StatusCode == 429 {
-		resetEpoch := response.Header.Get("Ratelimit-Reset")
-		rlErr := RateLimitError{
-			err: "rate limited: received http 429",
-		}
-		if resetEpoch != "" {
-			epoch, err := strconv.ParseInt(resetEpoch, 10, 64)
-			if err != nil {
-				return nil, err
-			}
-			reset := time.Unix(epoch, 0)
-			rlErr.reset = &reset
-		}
-		return nil, rlErr
-	}
-	if response.StatusCode != 200 {
-		body, _ := ioutil.ReadAll(response.Body)
-		err = GenericError{
-			err:  fmt.Sprintf("%d error making request to twitch, %s", response.StatusCode, string(body)),
-			code: response.StatusCode,
-			body: body,
-		}
-		return nil, err
-	}
-	return ioutil.ReadAll(response.Body)
+	return c.helixRequest(endpoint, queryParams, nil, "GET")
 }
 
 // GetTwitchUsers makes an api call to https://dev.twitch.tv/docs/api/reference#get-users, and formats the data.
