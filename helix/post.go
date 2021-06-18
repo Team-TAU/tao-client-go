@@ -216,6 +216,7 @@ func (c *Client) CreateUserFollows(fromID, toID string, allowNotifications bool)
 	return true, nil
 }
 
+// StartCommercial allows you to start a commercial on a stream, see https://dev.twitch.tv/docs/api/reference#start-commercial
 func (c *Client) StartCommercial(broadcasterID string, length int) (*Commercial, error) {
 	type commercial struct {
 		BroadcasterID string `json:"broadcaster_id"`
