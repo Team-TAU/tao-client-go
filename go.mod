@@ -1,4 +1,4 @@
-module github.com/Team-TAU/tao-client-go
+module github.com/Team-TAU/tau-client-go
 
 go 1.13
 
