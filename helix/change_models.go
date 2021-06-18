@@ -2,6 +2,7 @@ package helix
 
 import "time"
 
+// CustomRewardsUpdate is used when creating and updating custom rewards
 type CustomRewardsUpdate struct {
 	Title                             *string `json:"title,omitempty"`
 	Prompt                            *string `json:"prompt,omitempty"`
@@ -19,6 +20,7 @@ type CustomRewardsUpdate struct {
 	ShouldRedemptionsSkipRequestQueue *bool   `json:"should_redemptions_skip_request_queue,omitempty"`
 }
 
+// StreamScheduleSegmentUpdate is used when creating or updating stream segments
 type StreamScheduleSegmentUpdate struct {
 	StartTime   *time.Time `json:"start_time,omitempty"`
 	Timezone    *string    `json:"timezone,omitempty"`
@@ -28,10 +30,12 @@ type StreamScheduleSegmentUpdate struct {
 	Title       *string    `json:"title,omitempty"`
 }
 
+// Outcome is used by CreatePoll and CreatePrediction for the possible choices
 type Outcome struct {
 	Title string `json:"title"`
 }
 
+// CreatePoll is used to create a poll in a stream
 type CreatePoll struct {
 	BroadcasterID              string    `json:"broadcaster_id"`
 	Title                      string    `json:"title"`
@@ -43,6 +47,7 @@ type CreatePoll struct {
 	ChannelPointsPerVote       *int      `json:"channel_points_per_vote,omitempty"`
 }
 
+// CreatePrediction is used to create a prediction in a stream
 type CreatePrediction struct {
 	BroadcasterId    string    `json:"broadcaster_id"`
 	Title            string    `json:"title"`

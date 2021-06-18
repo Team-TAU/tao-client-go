@@ -424,6 +424,7 @@ type Polls struct {
 	Pagination *TwitchPagination `json:"pagination"`
 }
 
+// TopPredictors represents users who bet the most on their Predictions and won
 type TopPredictors struct {
 	UserID            string `json:"id"`
 	UserName          string `json:"name"`
@@ -749,11 +750,13 @@ type WebhookSubscriptions struct {
 	Pagination *TwitchPagination `json:"pagination"`
 }
 
+// Vacation Represents a vacation object as part of a ChannelStreamSchedule
 type Vacation struct {
 	StartTime time.Time `json:"start_time"`
 	EndTime   time.Time `json:"end_time"`
 }
 
+// ChannelStreamSchedule represents the stream schedule data
 type ChannelStreamSchedule struct {
 	Data struct {
 		Segments []struct {

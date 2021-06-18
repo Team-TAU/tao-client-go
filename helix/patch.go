@@ -47,10 +47,10 @@ func (c *Client) PatchRequest(endpoint string, params map[string][]string, body 
 	if response.StatusCode >= 200 && response.StatusCode < 300 {
 		if response.StatusCode == 204 {
 			return true, nil, nil
-		} else {
-			body, err := ioutil.ReadAll(response.Body)
-			return true, body, err
 		}
+		body, err := ioutil.ReadAll(response.Body)
+		return true, body, err
+
 	}
 	if response.StatusCode == 401 {
 		return false, nil, AuthorizationError{}
