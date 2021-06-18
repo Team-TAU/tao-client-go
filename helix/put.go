@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+// PutRequest wraps PUT requests to helix thru TAU
 func (c *Client) PutRequest(endpoint string, params map[string][]string, body []byte) ([]byte, error) {
 	protocol := "http"
 	if c.hasSSL {
@@ -109,6 +110,8 @@ func (c *Client) ReplaceStreamTags(broadcasterID string, tags []string) (bool, e
 	return true, nil
 }
 
+// UpdateUser allows you to update the description of a user.  If the description is nil it just gets the user.
+// See https://dev.twitch.tv/docs/api/reference#update-user.
 func (c *Client) UpdateUser(description *string) (*Users, error) {
 	params := make(map[string][]string)
 	if description != nil {
