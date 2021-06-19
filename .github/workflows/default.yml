@@ -43,6 +43,24 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
+  sast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+
+      - name: get modules
+        run: echo "PACKAGES=$(go list ./... | grep -Ev 'vendor|examples')" >> $GITHUB_ENV
+
+      - name: Run Gosec Security Scanner
+        uses: securego/gosec@master
+        with:
+          args: ${{ env.PACKAGES }}
+
   test:
     runs-on: ubuntu-latest
     strategy:
