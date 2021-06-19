@@ -105,3 +105,35 @@ jobs:
         uses: golangci/golangci-lint-action@v2
         with:
           version: v1.41.0
+
+  compile-examples:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        GOVERSION:
+          - 1.13
+          - 1.14
+          - 1.15
+          - 1.16
+    needs:
+      - dep
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.GOVERSION }}
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+
+      - name: Run tests
+        run: |
+          go build ./examples/helix-passthru/main.go
+          go build ./examples/raw-receive/main.go
+          go build ./examples/save-latest/main.go
