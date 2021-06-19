@@ -1,4 +1,5 @@
 # Go TAU Client
+[![Default Workflow](https://github.com/Team-TAU/tau-client-go/actions/workflows/default.yml/badge.svg)](https://github.com/Team-TAU/tau-client-go/actions/workflows/default.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/Team-TAU/tau-client-go)](https://pkg.go.dev/github.com/Team-TAU/tau-client-go)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Team-TAU/tau-client-go)](https://goreportcard.com/report/github.com/Team-TAU/tau-client-go)
 [![discord](https://img.shields.io/discord/493162062524973056?label=discord)](https://discord.gg/PPVYMeP)
