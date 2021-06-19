@@ -85,7 +85,7 @@ jobs:
           export PKG_LIST=$(go list ./... | grep -Ev 'vendor|examples')
           mkdir cover
           for package in ${PKG_LIST}; do go test -covermode=count -coverprofile "cover/${package##*/}.cov" "$package" ; done
-          "echo 'mode: count' > coverage.cov"
+          echo 'mode: count' > coverage.cov
           tail -q -n +2 cover/*.cov >> coverage.cov
           go tool cover -func=coverage.cov
           go tool cover -html=coverage.cov -o index.html
