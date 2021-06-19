@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Team-TAU/tao-client-go/helix"
+	"github.com/Team-TAU/tau-client-go/helix"
 	"os"
 	"strconv"
 )
