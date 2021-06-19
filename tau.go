@@ -115,6 +115,7 @@ func GetAuthToken(username, password, hostname string, port int, hasSSL bool) (s
 	}
 	url := fmt.Sprintf("%s://%s:%d/api-token-auth/", protocol, hostname, port)
 	body := fmt.Sprintf("{\"username\": \"%s\",\"password\": \"%s\"}", username, password)
+	/* #nosec G107 */
 	resp, err := http.Post(url, "application/json", strings.NewReader(body))
 	if err != nil {
 		return "", err
