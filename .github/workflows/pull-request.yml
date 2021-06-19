@@ -33,6 +33,13 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        GOVERSION:
+          - 1.13
+          - 1.14
+          - 1.15
+          - 1.16
     needs:
       - dep
     steps:
@@ -41,7 +48,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16
+          go-version: ${{ matrix.GOVERSION }}
 
       - uses: actions/cache@v2
         id: cache
@@ -53,4 +60,4 @@ jobs:
 
       - name: Run tests
         run: |
-          go test
+          go test -short $(go list ./... | grep -Ev 'vendor|examples')
