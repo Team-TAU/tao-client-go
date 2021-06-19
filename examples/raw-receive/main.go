@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	tau "gitlab.com/wwsean08/go-tau"
+	tau "github.com/Team-TAU/tao-client-go"
 	"os"
 	"strconv"
 	"time"
