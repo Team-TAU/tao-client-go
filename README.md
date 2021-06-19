@@ -1,11 +1,9 @@
-# Go Tau
-[![pipeline status](https://gitlab.com/wwsean08/go-tau/badges/main/pipeline.svg)](https://gitlab.com/wwsean08/go-tau/-/commits/main)
-[![coverage report](https://gitlab.com/wwsean08/go-tau/badges/main/coverage.svg)](https://gitlab.com/wwsean08/go-tau/-/commits/main)
-[![Go Reference](https://pkg.go.dev/badge/gitlab.com/wwsean08/go-tau.svg)](https://pkg.go.dev/gitlab.com/wwsean08/go-tau)
-[![Go Report Card](https://goreportcard.com/badge/gitlab.com/wwsean08/go-tau)](https://goreportcard.com/report/gitlab.com/wwsean08/go-tau)
+# Go TAU Client
+[![Go Reference](https://pkg.go.dev/badge/github.com/Team-TAU/tau-client-go)](https://pkg.go.dev/github.com/Team-TAU/tau-client-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Team-TAU/tau-client-go)](https://goreportcard.com/report/github.com/Team-TAU/tau-client-go)
 [![discord](https://img.shields.io/discord/493162062524973056?label=discord)](https://discord.gg/PPVYMeP)
 
-This library is designed to make integrating with [TAU](https://github.com/FiniteSingularity/tau) in go, taking care of parsing out the messages and calling the registered receivers, leaving you to handle the logic.
+This library is designed to make integrating with [TAU](https://github.com/FiniteSingularity/tau) in go, taking care of parsing out the messages and calling the registered receivers.  From there all you have to do is create the logic around the various events that you can receive.
 
 ## Callbacks
 You can implement any/all of these callbacks in your own code to take advantage of this library allowing you to take care of the business logic, while this library takes care of parsing messages into usable structs.
