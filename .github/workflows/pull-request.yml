@@ -136,4 +136,4 @@ jobs:
         run: |
           go build ./examples/helix-passthru/main.go
           go build ./examples/raw-receive/main.go
-          go build ./examples/save-latest/main.go
+          go build ./examples/save-latests/main.go
