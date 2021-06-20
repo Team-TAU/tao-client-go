@@ -1,0 +1,53 @@
+name: Code Coverage
+on:
+  push:
+    branches:
+      - main
+      - feature/13
+
+jobs:
+  coverage-report:
+    name: coverage-report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+
+      - name: Get coverage percentage
+        run: |
+          go mod download
+          export PKG_LIST=$(go list ./... | grep -Ev 'vendor|examples')
+          mkdir cover
+          for package in ${PKG_LIST}; do
+            go test -covermode=count -coverprofile "cover/${package##*/}.cov" "$package";
+          done
+          echo 'mode: count' > coverage.cov
+          tail -q -n +2 cover/*.cov >> coverage.cov
+          go tool cover -func=coverage.cov > coverage.out
+          echo "COVERAGE=$(grep -E 'total:\s+\(statements\)\s+\d+.\d+%' coverage.out | awk '{ print $3 }' | sed 's/%//')" >> $GITHUB_ENV
+
+      - name: Generate code coverage badge
+        run: |
+          if (( $(echo "$COVERAGE <= 50" | bc -l) )) ; then
+            COLOR=red
+          elif (( $(echo "$COVERAGE > 80" | bc -l) )); then
+            COLOR=green
+          else
+            COLOR=orange
+          fi
+
+          curl "https://img.shields.io/badge/coavrege-$COVERAGE%25-$COLOR" > badge.svg
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Upload badge
+        run: |
+          aws s3 cp badge.svg s3://tau-client-go/badge.svg --cache-control no-cache
