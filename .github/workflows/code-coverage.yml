@@ -50,4 +50,4 @@ jobs:
 
       - name: Upload badge
         run: |
-          aws s3 cp badge.svg s3://tau-client-go/badge.svg --cache-control no-cache
+          aws s3 cp badge.svg s3://tau-client-go/badge.svg --cache-control no-cache --acl public-read
