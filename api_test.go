@@ -140,6 +140,8 @@ func TestClient_GetLatestStreamForStreamer(t *testing.T) {
 	require.Equal(t, "en", stream.Language)
 	require.Equal(t, "https://static-cdn.jtvnw.net/previews-ttv/live_user_geekycleangaming-{width}x{height}.jpg", stream.ThumbnailUrl)
 	require.False(t, stream.IsMature)
+	require.Len(t, stream.TagIDs, 1)
+	require.Equal(t, "6ea6bca4-4712-4ab9-a906-e3336a9d8039", stream.TagIDs[0])
 }
 
 func TestClient_GetLatestStreamForStreamerReturnsError(t *testing.T) {
