@@ -214,6 +214,7 @@ func TestClient_GetStreamsForStreamer(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		require.Equal(t, "/api/v1/streamers/34593db1-1228-40e0-bc3b-2c14b58b1f64/streams/", r.URL.Path)
 		require.Equal(t, "Token foo", r.Header.Get("Authorization"))
+		require.Equal(t, "1", r.URL.Query().Get("page"))
 		require.Equal(t, "GET", r.Method)
 		w.WriteHeader(http.StatusOK)
 		_, err := fmt.Fprint(w, "{\"count\":1,\"next\":null,\"previous\":null,\"results\":[{\"id\":\"dd780465-6454-40ed-98a6-c863a9638d09\",\"stream_id\":\"42502956941\",\"user_id\":\"501585826\",\"user_login\":\"4davidblue\",\"user_name\":\"4davidblue\",\"game_id\":\"509658\",\"game_name\":\"Just Chatting\",\"type\":\"live\",\"title\":\"IT TAKES TWOsday (w CiaoJordyn) | !donate !gif !freesub !dnd\",\"viewer_count\":0,\"started_at\":\"2021-06-23T01:31:54+0000\",\"ended_at\":null,\"language\":\"en\",\"thumbnail_url\":\"https://static-cdn.jtvnw.net/previews-ttv/live_user_4davidblue-{width}x{height}.jpg\",\"tag_ids\":null,\"is_mature\":false}]}")

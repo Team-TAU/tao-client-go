@@ -20,7 +20,7 @@ func (c *Client) GetStreamers() ([]*TAUStreamer, error) {
 		return nil, err
 	}
 
-	return streamers, err
+	return streamers, nil
 }
 
 // GetLatestStreamForStreamer gets the latest stream for a given streamer
@@ -86,7 +86,7 @@ func (c *Client) FollowStreamerOnTau(username string) (*TAUStreamer, error) {
 // GetStreamsForStreamer will get n streams for a streamer.  If maximumStreams is set to -1 then all
 // streams will be gathered.  This may take some time due to pagination.  In the case where there are fewer
 // results than the maximumStreams, those results will be returned.  The number of results you get may be slightly
-// more than maximumResults, based on the pagination of the results.
+// more than maximumResults, based on the pagination of the results.  If you request 0 results, you will get 0 results.
 func (c *Client) GetStreamsForStreamer(streamerID string, maximumStreams int) ([]TAUStream, error) {
 	type tmp struct {
 		Streams  []TAUStream `json:"results"`
