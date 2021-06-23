@@ -111,10 +111,12 @@ func (c *Client) GetStreamsForStreamer(streamerID string, maximumStreams int) ([
 
 	count := 0
 	i := 1
+	params := map[string][]string{
+		"page": {fmt.Sprintf("%d", i)},
+	}
+
 	for count <= maximumStreams {
-		params := map[string][]string{
-			"page": {fmt.Sprintf("%d", i)},
-		}
+		params["page"] = []string{fmt.Sprintf("%d", i)}
 		body, err := c.apiRequest(url, params, nil, "GET")
 		if err != nil {
 			return nil, err
