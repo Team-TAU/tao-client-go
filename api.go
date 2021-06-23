@@ -3,6 +3,7 @@ package gotau
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"strings"
 )
 
@@ -80,4 +81,60 @@ func (c *Client) FollowStreamerOnTau(username string) (*TAUStreamer, error) {
 	}
 
 	return streamer, nil
+}
+
+// GetStreamsForStreamer will get n streams for a streamer.  If maximumStreams is set to -1 then all
+// streams will be gathered.  This may take some time due to pagination.  In the case where there are fewer
+// results than the maximumStreams, those results will be returned.  The number of results you get may be slightly
+// more than maximumResults, based on the pagination of the results.
+func (c *Client) GetStreamsForStreamer(streamerID string, maximumStreams int) ([]TAUStream, error) {
+	type tmp struct {
+		Streams  []TAUStream `json:"results"`
+		Previous *string     `json:"previous"`
+		Next     *string     `json:"next"`
+		Count    int         `json:"count"`
+	}
+	streamerID = strings.TrimSpace(streamerID)
+	if streamerID == "" {
+		return nil, BadRequestError{
+			err: "invalid request, streamer id can't be blank",
+		}
+	}
+
+	results := make([]TAUStream, 0)
+	url := fmt.Sprintf("streamers/%s/streams", streamerID)
+	getAll := maximumStreams < 0
+	// if there are more results than that, we've fucked up
+	if getAll {
+		maximumStreams = math.MaxInt64
+	}
+
+	count := 0
+	i := 1
+	for count <= maximumStreams {
+		params := map[string][]string{
+			"page": {fmt.Sprintf("%d", i)},
+		}
+		body, err := c.apiRequest(url, params, nil, "GET")
+		if err != nil {
+			return nil, err
+		}
+
+		tmpData := new(tmp)
+		err = json.Unmarshal(body, tmpData)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, tmpData.Streams...)
+
+		// no data left so abort early whether or not we've got enough data
+		if tmpData.Next == nil {
+			break
+		}
+
+		count += len(tmpData.Streams)
+		i++
+	}
+
+	return results, nil
 }

@@ -209,3 +209,64 @@ func TestClient_FollowStreamerOnTauReturnsError(t *testing.T) {
 	require.ErrorIs(t, err, BadRequestError{"invalid request, username can't be blank"})
 	require.Nil(t, streamer)
 }
+
+func TestClient_GetStreamsForStreamer(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, "/api/v1/streamers/34593db1-1228-40e0-bc3b-2c14b58b1f64/streams/", r.URL.Path)
+		require.Equal(t, "Token foo", r.Header.Get("Authorization"))
+		require.Equal(t, "GET", r.Method)
+		w.WriteHeader(http.StatusOK)
+		_, err := fmt.Fprint(w, "{\"count\":1,\"next\":null,\"previous\":null,\"results\":[{\"id\":\"dd780465-6454-40ed-98a6-c863a9638d09\",\"stream_id\":\"42502956941\",\"user_id\":\"501585826\",\"user_login\":\"4davidblue\",\"user_name\":\"4davidblue\",\"game_id\":\"509658\",\"game_name\":\"Just Chatting\",\"type\":\"live\",\"title\":\"IT TAKES TWOsday (w CiaoJordyn) | !donate !gif !freesub !dnd\",\"viewer_count\":0,\"started_at\":\"2021-06-23T01:31:54+0000\",\"ended_at\":null,\"language\":\"en\",\"thumbnail_url\":\"https://static-cdn.jtvnw.net/previews-ttv/live_user_4davidblue-{width}x{height}.jpg\",\"tag_ids\":null,\"is_mature\":false}]}")
+		require.NoError(t, err)
+	}))
+	defer ts.Close()
+
+	url := strings.TrimPrefix(ts.URL, "http://")
+	host, port, err := net.SplitHostPort(url)
+	require.NoError(t, err)
+	portNum, err := strconv.Atoi(port)
+	require.NoError(t, err)
+
+	client := Client{
+		hostname: host,
+		port:     portNum,
+		token:    "foo",
+		hasSSL:   false,
+	}
+
+	streams, err := client.GetStreamsForStreamer("34593db1-1228-40e0-bc3b-2c14b58b1f64", 10)
+	require.NoError(t, err)
+	require.NotNil(t, streams)
+	require.Len(t, streams, 1)
+	require.Equal(t, "dd780465-6454-40ed-98a6-c863a9638d09", streams[0].ID)
+	require.Equal(t, "42502956941", streams[0].StreamID)
+	require.Equal(t, "501585826", streams[0].UserID)
+	require.Equal(t, "4davidblue", streams[0].UserLogin)
+	require.Equal(t, "4davidblue", streams[0].UserName)
+	require.Equal(t, "509658", streams[0].GameID)
+	require.Equal(t, "Just Chatting", streams[0].GameName)
+	require.Equal(t, "live", streams[0].Type)
+	require.Equal(t, "IT TAKES TWOsday (w CiaoJordyn) | !donate !gif !freesub !dnd", streams[0].Title)
+	require.Zero(t, streams[0].ViewerCount)
+	require.Equal(t, 2021, streams[0].StartedAt.Year())
+	require.Nil(t, streams[0].EndedAt)
+	require.Equal(t, "en", streams[0].Language)
+	require.Equal(t, "https://static-cdn.jtvnw.net/previews-ttv/live_user_4davidblue-{width}x{height}.jpg", streams[0].ThumbnailUrl)
+	require.Nil(t, streams[0].TagIDs)
+	require.False(t, streams[0].IsMature)
+}
+
+func TestClient_GetStreamsForStreamerReturnsError(t *testing.T) {
+	c := Client{}
+	streams, err := c.GetStreamsForStreamer("", 0)
+	require.ErrorIs(t, err, BadRequestError{"invalid request, streamer id can't be blank"})
+	require.Nil(t, streams)
+
+	streams, err = c.GetStreamsForStreamer("    ", 0)
+	require.ErrorIs(t, err, BadRequestError{"invalid request, streamer id can't be blank"})
+	require.Nil(t, streams)
+
+	streams, err = c.GetStreamsForStreamer("	", 0)
+	require.ErrorIs(t, err, BadRequestError{"invalid request, streamer id can't be blank"})
+	require.Nil(t, streams)
+}
