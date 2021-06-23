@@ -44,3 +44,40 @@ func (c *Client) GetLatestStreamForStreamer(ID string) (*TAUStream, error) {
 
 	return stream, nil
 }
+
+// FollowStreamerOnTau follows the users and subscribes for notifications when they go live
+func (c *Client) FollowStreamerOnTau(username string) (*TAUStreamer, error) {
+	type tmp struct {
+		Username  string `json:"twitch_username"`
+		Streaming bool   `json:"streaming"`
+		Disabled  bool   `json:"disabled"`
+	}
+
+	username = strings.TrimSpace(username)
+	if username == "" {
+		return nil, BadRequestError{
+			err: "invalid request, username can't be blank",
+		}
+	}
+
+	data := tmp{
+		Username: username,
+	}
+
+	body, err := json.Marshal(data)
+	if err != nil {
+		return nil, err
+	}
+
+	responseBody, err := c.apiRequest("streamers", nil, body, "POST")
+	if err != nil {
+		return nil, err
+	}
+	streamer := new(TAUStreamer)
+	err = json.Unmarshal(responseBody, streamer)
+	if err != nil {
+		return nil, err
+	}
+
+	return streamer, nil
+}

@@ -158,3 +158,54 @@ func TestClient_GetLatestStreamForStreamerReturnsError(t *testing.T) {
 	require.ErrorIs(t, err, BadRequestError{"invalid request, ID can't be blank"})
 	require.Nil(t, stream)
 }
+
+func TestClient_FollowStreamerOnTau(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, "/api/v1/streamers/", r.URL.Path)
+		require.Equal(t, "Token foo", r.Header.Get("Authorization"))
+		require.Equal(t, "POST", r.Method)
+		w.WriteHeader(http.StatusCreated)
+		_, err := fmt.Fprint(w, "{\"id\":\"417e786c-2e48-4371-97bc-e782ab44f524\",\"twitch_username\":\"Freyline\",\"twitch_id\":\"208887405\",\"streaming\":false,\"disabled\":false,\"created\":\"2021-06-23T00:35:41+0000\",\"updated\":\"2021-06-23T00:35:41+0000\"}")
+		require.NoError(t, err)
+	}))
+	defer ts.Close()
+
+	url := strings.TrimPrefix(ts.URL, "http://")
+	host, port, err := net.SplitHostPort(url)
+	require.NoError(t, err)
+	portNum, err := strconv.Atoi(port)
+	require.NoError(t, err)
+
+	client := Client{
+		hostname: host,
+		port:     portNum,
+		token:    "foo",
+		hasSSL:   false,
+	}
+
+	streamer, err := client.FollowStreamerOnTau("Freyline")
+	require.NoError(t, err)
+	require.NotNil(t, streamer)
+	require.Equal(t, "417e786c-2e48-4371-97bc-e782ab44f524", streamer.ID)
+	require.Equal(t, "Freyline", streamer.TwitchUsername)
+	require.Equal(t, "208887405", streamer.TwitchID)
+	require.False(t, streamer.Streaming)
+	require.False(t, streamer.Disabled)
+	require.Equal(t, 2021, streamer.Created.Year())
+	require.Equal(t, 2021, streamer.Updated.Year())
+}
+
+func TestClient_FollowStreamerOnTauReturnsError(t *testing.T) {
+	c := Client{}
+	streamer, err := c.FollowStreamerOnTau("")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, username can't be blank"})
+	require.Nil(t, streamer)
+
+	streamer, err = c.FollowStreamerOnTau("    ")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, username can't be blank"})
+	require.Nil(t, streamer)
+
+	streamer, err = c.FollowStreamerOnTau("	")
+	require.ErrorIs(t, err, BadRequestError{"invalid request, username can't be blank"})
+	require.Nil(t, streamer)
+}
