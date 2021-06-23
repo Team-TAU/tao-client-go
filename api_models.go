@@ -28,8 +28,8 @@ type TAUStream struct {
 	Type         string  `json:"type"`
 	Title        string  `json:"title"`
 	ViewerCount  int     `json:"viewer_count"`
-	StartedAt    Time    `json:"started_at"`
-	EndedAt      Time    `json:"ended_at"`
+	StartedAt    *Time   `json:"started_at"`
+	EndedAt      *Time   `json:"ended_at"`
 	Language     string  `json:"language"`
 	ThumbnailUrl string  `json:"thumbnail_url"`
 	TagIDs       TAUTags `json:"tag_ids"`
@@ -45,6 +45,10 @@ func (t *TAUTags) UnmarshalJSON(b []byte) error {
 	err := json.Unmarshal(b, &stringVal)
 	if err != nil {
 		return err
+	}
+	if stringVal == "" {
+		*t = nil
+		return nil
 	}
 	stringVal = strings.TrimPrefix(stringVal, "[")
 	stringVal = strings.TrimSuffix(stringVal, "]")
