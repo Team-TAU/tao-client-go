@@ -21,12 +21,12 @@ func (c *Client) DeleteCustomReward(broadcasterID, ID string) (bool, error) {
 	ID = strings.TrimSpace(ID)
 	if broadcasterID == "" {
 		return false, gotau.BadRequestError{
-			"invalid request, broadcaster can't be blank",
+			Err: "invalid request, broadcaster can't be blank",
 		}
 	}
 	if ID == "" {
 		return false, gotau.BadRequestError{
-			"invalid request, ID can't be blank",
+			Err: "invalid request, ID can't be blank",
 		}
 	}
 
@@ -43,7 +43,7 @@ func (c *Client) DeleteEventSubSubscription(ID string) (bool, error) {
 	ID = strings.TrimSpace(ID)
 	if ID == "" {
 		return false, gotau.BadRequestError{
-			"invalid request, ID can't be blank",
+			Err: "invalid request, ID can't be blank",
 		}
 	}
 
@@ -61,12 +61,12 @@ func (c *Client) DeleteUserFollows(fromID, toID string) (bool, error) {
 
 	if fromID == "" {
 		return false, gotau.BadRequestError{
-			"invalid request, fromID can't be blank",
+			Err: "invalid request, fromID can't be blank",
 		}
 	}
 	if toID == "" {
 		return false, gotau.BadRequestError{
-			"invalid request, toID can't be blank",
+			Err: "invalid request, toID can't be blank",
 		}
 	}
 
@@ -83,7 +83,7 @@ func (c *Client) UnblockUser(userID string) (bool, error) {
 	userID = strings.TrimSpace(userID)
 	if userID == "" {
 		return false, gotau.BadRequestError{
-			"invalid request, userID can't be blank",
+			Err: "invalid request, userID can't be blank",
 		}
 	}
 
@@ -98,12 +98,12 @@ func (c *Client) UnblockUser(userID string) (bool, error) {
 func (c *Client) DeleteVideos(IDs []string) (bool, error) {
 	if len(IDs) == 0 {
 		return false, gotau.BadRequestError{
-			"invalid request, IDs can't be empty",
+			Err: "invalid request, IDs can't be empty",
 		}
 	}
 	if len(IDs) > 5 {
 		return false, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, maximum number of IDs is 5 but you supplied %d", len(IDs)),
+			Err: fmt.Sprintf("invalid request, maximum number of IDs is 5 but you supplied %d", len(IDs)),
 		}
 	}
 
@@ -123,12 +123,12 @@ func (c *Client) DeleteChannelStreamScheduleSegment(broadcasterID, ID string) (b
 	ID = strings.TrimSpace(ID)
 	if broadcasterID == "" {
 		return false, gotau.BadRequestError{
-			"invalid request, broadcaster can't be blank",
+			Err: "invalid request, broadcaster can't be blank",
 		}
 	}
 	if ID == "" {
 		return false, gotau.BadRequestError{
-			"invalid request, ID can't be blank",
+			Err: "invalid request, ID can't be blank",
 		}
 	}
 

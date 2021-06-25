@@ -16,12 +16,12 @@ func (c *Client) ReplaceStreamTags(broadcasterID string, tags []string) (bool, e
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return false, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if len(tags) > 5 {
 		return false, gotau.BadRequestError{
-			"invalid request, maximum of 5 tags can be set",
+			Err: "invalid request, maximum of 5 tags can be set",
 		}
 	}
 

@@ -23,7 +23,7 @@ func (c *Client) ModifyChannelInformation(broadcasterID string, gameID, language
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return false, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 
@@ -47,7 +47,7 @@ func (c *Client) ModifyChannelInformation(broadcasterID string, gameID, language
 
 	if len(bodyObject) == 0 {
 		return false, gotau.BadRequestError{
-			"invalid request, at least one parameter must be provided of gameID, language, title, and delay",
+			Err: "invalid request, at least one parameter must be provided of gameID, language, title, and delay",
 		}
 	}
 	body, err := json.Marshal(bodyObject)
@@ -66,17 +66,17 @@ func (c *Client) UpdateCustomReward(broadcasterID string, ID string, change *Cus
 	ID = strings.TrimSpace(ID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if ID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, ID can't be blank",
+			Err: "invalid request, ID can't be blank",
 		}
 	}
 	if change == nil {
 		return nil, gotau.BadRequestError{
-			"invalid request, change can't be nil",
+			Err: "invalid request, change can't be nil",
 		}
 	}
 	params := map[string][]string{
@@ -109,26 +109,26 @@ func (c *Client) UpdateRedemptionStatus(broadcasterID, rewardID string, redempti
 	rewardID = strings.TrimSpace(rewardID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if rewardID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, rewardID can't be blank",
+			Err: "invalid request, rewardID can't be blank",
 		}
 	}
 	if len(redemptionIDs) == 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, redemptionIDs can't be empty or nil",
+			Err: "invalid request, redemptionIDs can't be empty or nil",
 		}
 	} else if len(redemptionIDs) > 50 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request,  maximum of 50 redemptionIDs, but you supplied %d", len(redemptionIDs)),
+			Err: fmt.Sprintf("invalid request,  maximum of 50 redemptionIDs, but you supplied %d", len(redemptionIDs)),
 		}
 	}
 	if status != "FULFILLED" && status != "CANCELED" {
 		return nil, gotau.BadRequestError{
-			"invalid request,  status can only be one of FULFILLED or CANCELED",
+			Err: "invalid request,  status can only be one of FULFILLED or CANCELED",
 		}
 	}
 
@@ -168,17 +168,17 @@ func (c *Client) EndPoll(broadcasterID, pollID, status string) (*Polls, error) {
 	status = strings.TrimSpace(status)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if pollID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, poll id can't be blank",
+			Err: "invalid request, poll id can't be blank",
 		}
 	}
 	if status != "TERMINATED" && status != "ARCHIVED" {
 		return nil, gotau.BadRequestError{
-			"invalid request, status must either be TERMINATED or ARCHIVED",
+			Err: "invalid request, status must either be TERMINATED or ARCHIVED",
 		}
 	}
 	bodyMap := map[string]string{
@@ -211,22 +211,22 @@ func (c *Client) EndPrediction(broadcasterID, predictionID, status string, winni
 	status = strings.TrimSpace(status)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if predictionID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, prediction id can't be blank",
+			Err: "invalid request, prediction id can't be blank",
 		}
 	}
 	if status != "RESOLVED" && status != "CANCELED" && status != "LOCKED" {
 		return nil, gotau.BadRequestError{
-			"invalid request, status must either be RESOLVED, CANCELED, or LOCKED",
+			Err: "invalid request, status must either be RESOLVED, CANCELED, or LOCKED",
 		}
 	}
 	if status == "RESOLVED" && winningOutcome == nil {
 		return nil, gotau.BadRequestError{
-			"invalid request, if status RESOLVED, winning outcome must be set",
+			Err: "invalid request, if status RESOLVED, winning outcome must be set",
 		}
 	}
 	bodyMap := map[string]string{
@@ -262,23 +262,23 @@ func (c *Client) UpdateChannelStreamSchedule(broadcasterID string, vacationEnabl
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return false, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if vacationEnabled != nil && *vacationEnabled {
 		if vacationStartTime == nil {
 			return false, gotau.BadRequestError{
-				"invalid request, if vacationEnabled, vacationStartTime must be specified",
+				Err: "invalid request, if vacationEnabled, vacationStartTime must be specified",
 			}
 		}
 		if vacationEndTime == nil {
 			return false, gotau.BadRequestError{
-				"invalid request, if vacationEnabled, vacationEndTime must be specified",
+				Err: "invalid request, if vacationEnabled, vacationEndTime must be specified",
 			}
 		}
 		if timezone == nil {
 			return false, gotau.BadRequestError{
-				"invalid request, if vacationEnabled, timezone must be specified",
+				Err: "invalid request, if vacationEnabled, timezone must be specified",
 			}
 		}
 	}
@@ -308,17 +308,17 @@ func (c *Client) UpdateChannelStreamScheduleSegment(broadcasterID, segmentID str
 	segmentID = strings.TrimSpace(segmentID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if segmentID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, segment id can't be blank",
+			Err: "invalid request, segment id can't be blank",
 		}
 	}
 	if update == nil {
 		return nil, gotau.BadRequestError{
-			"invalid request, update can't be nil",
+			Err: "invalid request, update can't be nil",
 		}
 	}
 	params := map[string][]string{

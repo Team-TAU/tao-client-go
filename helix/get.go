@@ -18,7 +18,7 @@ func (c *Client) GetRequest(endpoint string, queryParams map[string][]string) ([
 func (c *Client) GetTwitchUsers(logins []string, ids []string) (*Users, error) {
 	if len(logins)+len(ids) > 100 {
 		return nil, gotau.BadRequestError{
-			"invalid request, get users only supports a maximum of 100 total logins and ids combined.",
+			Err: "invalid request, get users only supports a maximum of 100 total logins and ids combined.",
 		}
 	}
 
@@ -42,11 +42,11 @@ func (c *Client) GetBitsLeaderboard(count int, period string, startedAt *time.Ti
 	params := make(map[string][]string)
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, maximum value for count is 100 and you input %d", count),
+			Err: fmt.Sprintf("invalid request, maximum value for count is 100 and you input %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can not be negative",
+			Err: "invalid request, count can not be negative",
 		}
 	}
 	if count != 0 {
@@ -66,7 +66,7 @@ func (c *Client) GetBitsLeaderboard(count int, period string, startedAt *time.Ti
 			params["period"] = []string{period}
 		default:
 			return nil, gotau.BadRequestError{
-				fmt.Sprintf("invalid request, period can only all, day, week, month, or year, and you input %s", period),
+				Err: fmt.Sprintf("invalid request, period can only all, day, week, month, or year, and you input %s", period),
 			}
 		}
 	}
@@ -120,7 +120,7 @@ func (c *Client) GetChannelInformation(broadcasterID string) (*ChannelInformatio
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	param := make(map[string][]string)
@@ -144,7 +144,7 @@ func (c *Client) GetChannelEditors(broadcasterID string) (*ChannelEditors, error
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 
@@ -169,12 +169,12 @@ func (c *Client) GetCustomRewards(broadcasterID string, rewardID []string, onlyM
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if len(rewardID) > 50 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, maximum number of rewardIDs is 50, but you input %d", len(rewardID)),
+			Err: fmt.Sprintf("invalid request, maximum number of rewardIDs is 50, but you input %d", len(rewardID)),
 		}
 	}
 
@@ -208,13 +208,13 @@ func (c *Client) GetCustomRewardRedemption(broadcasterID string, rewardID string
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	rewardID = strings.TrimSpace(rewardID)
 	if rewardID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, rewardID can't be blank",
+			Err: "invalid request, rewardID can't be blank",
 		}
 	}
 	params := make(map[string][]string)
@@ -223,7 +223,7 @@ func (c *Client) GetCustomRewardRedemption(broadcasterID string, rewardID string
 
 	if len(redemptionID) > 50 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, maximum number of redemptionIDs is 50, but you input %d", len(redemptionID)),
+			Err: fmt.Sprintf("invalid request, maximum number of redemptionIDs is 50, but you input %d", len(redemptionID)),
 		}
 	} else if len(redemptionID) > 0 {
 		params["id"] = redemptionID
@@ -232,7 +232,7 @@ func (c *Client) GetCustomRewardRedemption(broadcasterID string, rewardID string
 	status = strings.TrimSpace(status)
 	if len(redemptionID) == 0 && status == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, if there are no redemptionIDs, status must be set",
+			Err: "invalid request, if there are no redemptionIDs, status must be set",
 		}
 	}
 
@@ -246,7 +246,7 @@ func (c *Client) GetCustomRewardRedemption(broadcasterID string, rewardID string
 			params["status"] = []string{status}
 		default:
 			return nil, gotau.BadRequestError{
-				fmt.Sprintf("invalid request, status can only be UNFULFILLED, FILFILLED, or CANCELED, but you input %s", status),
+				Err: fmt.Sprintf("invalid request, status can only be UNFULFILLED, FILFILLED, or CANCELED, but you input %s", status),
 			}
 		}
 	}
@@ -260,18 +260,18 @@ func (c *Client) GetCustomRewardRedemption(broadcasterID string, rewardID string
 			params["sort"] = []string{sort}
 		default:
 			return nil, gotau.BadRequestError{
-				fmt.Sprintf("invalid request, sort can only be OLDEST or NEWEST, but you input %s", sort),
+				Err: fmt.Sprintf("invalid request, sort can only be OLDEST or NEWEST, but you input %s", sort),
 			}
 		}
 	}
 
 	if resultCount > 50 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, maximum result count is 50, you input %d", resultCount),
+			Err: fmt.Sprintf("invalid request, maximum result count is 50, you input %d", resultCount),
 		}
 	} else if resultCount < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 	if resultCount != 0 {
@@ -301,7 +301,7 @@ func (c *Client) GetChannelChatBadges(broadcasterID string) (*ChannelChatBadges,
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	param := make(map[string][]string)
@@ -341,16 +341,16 @@ func (c *Client) GetClipsByBroadcaster(broadcasterID, after, before string, star
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count has a maximum of 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count has a maximum of 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count cannot be negative",
+			Err: "invalid request, count cannot be negative",
 		}
 	}
 	params := make(map[string][]string)
@@ -391,16 +391,16 @@ func (c *Client) GetClipsByGame(gameID, after, before string, startedAt,
 	gameID = strings.TrimSpace(gameID)
 	if gameID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, gameID can't be blank",
+			Err: "invalid request, gameID can't be blank",
 		}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count has a maximum of 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count has a maximum of 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count cannot be negative",
+			Err: "invalid request, count cannot be negative",
 		}
 	}
 	params := make(map[string][]string)
@@ -440,20 +440,20 @@ func (c *Client) GetClipsByID(clipID []string, after, before string, startedAt,
 	endedAt *time.Time, count int) (*Clips, error) {
 	if len(clipID) == 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, clipID can't be empty",
+			Err: "invalid request, clipID can't be empty",
 		}
 	} else if len(clipID) > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, clipID has a maximum of 100 but you supplied %d ids", len(clipID)),
+			Err: fmt.Sprintf("invalid request, clipID has a maximum of 100 but you supplied %d ids", len(clipID)),
 		}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count has a maximum of 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count has a maximum of 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count cannot be negative",
+			Err: "invalid request, count cannot be negative",
 		}
 	}
 	params := make(map[string][]string)
@@ -516,11 +516,11 @@ func (c *Client) GetEventSubSubscriptions(status, eventType string) (*EventSubSu
 func (c *Client) GetTopGames(before, after string, count int) (*Games, error) {
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 	params := make(map[string][]string)
@@ -551,12 +551,12 @@ func (c *Client) GetTopGames(before, after string, count int) (*Games, error) {
 func (c *Client) GetGames(ids, names []string) (*Games, error) {
 	if len(ids) == 0 && len(names) == 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, either id or names is necessary",
+			Err: "invalid request, either id or names is necessary",
 		}
 	}
 	if len(ids)+len(names) > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, maximum number of games and ids is 100, you input %d", len(ids)+len(names)),
+			Err: fmt.Sprintf("invalid request, maximum number of games and ids is 100, you input %d", len(ids)+len(names)),
 		}
 	}
 
@@ -583,16 +583,16 @@ func (c *Client) GetHypeTrainEvents(broadcasterID string, count int, id, cursor 
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 	params := make(map[string][]string)
@@ -625,16 +625,16 @@ func (c *Client) GetBannedEvents(broadcasterID, userID, after string, count int)
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 	params := make(map[string][]string)
@@ -668,21 +668,21 @@ func (c *Client) GetModerators(broadcasterID string, userIDs []string, after str
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 	if len(userIDs) > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, maximum user ids that can be supplied is 100 but you supplied %d", len(userIDs)),
+			Err: fmt.Sprintf("invalid request, maximum user ids that can be supplied is 100 but you supplied %d", len(userIDs)),
 		}
 	}
 
@@ -715,21 +715,21 @@ func (c *Client) GetModeratorEvents(broadcasterID string, userIDs []string, afte
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 	if len(userIDs) > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, maximum user ids that can be supplied is 100 but you supplied %d", len(userIDs)),
+			Err: fmt.Sprintf("invalid request, maximum user ids that can be supplied is 100 but you supplied %d", len(userIDs)),
 		}
 	}
 
@@ -761,21 +761,21 @@ func (c *Client) GetPolls(broadcasterID string, IDs []string, after string, coun
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if count > 20 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 20, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 20, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 	if len(IDs) > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, maximum ids that can be supplied is 100 but you supplied %d", len(IDs)),
+			Err: fmt.Sprintf("invalid request, maximum ids that can be supplied is 100 but you supplied %d", len(IDs)),
 		}
 	}
 
@@ -807,21 +807,21 @@ func (c *Client) GetPredictions(broadcasterID string, IDs []string, after string
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if count > 20 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 20, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 20, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 	if len(IDs) > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, maximum ids that can be supplied is 100 but you supplied %d", len(IDs)),
+			Err: fmt.Sprintf("invalid request, maximum ids that can be supplied is 100 but you supplied %d", len(IDs)),
 		}
 	}
 
@@ -853,16 +853,16 @@ func (c *Client) SearchCategories(query, after string, count int) (*Games, error
 	query = strings.TrimSpace(query)
 	if query == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, query can't be blank",
+			Err: "invalid request, query can't be blank",
 		}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 
@@ -894,16 +894,16 @@ func (c *Client) SearchChannels(query, after string, count int, liveOnly bool) (
 	query = strings.TrimSpace(query)
 	if query == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, query can't be blank",
+			Err: "invalid request, query can't be blank",
 		}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 
@@ -937,7 +937,7 @@ func (c *Client) GetStreamKey(broadcasterID string) (*StreamKey, error) {
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	params := make(map[string][]string)
@@ -962,31 +962,31 @@ func (c *Client) GetStreams(before, after string, count int, gameIDs []string, l
 	userIDs []string, userLogins []string) (*Streams, error) {
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 	if len(gameIDs) > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, max number of game ids is 100, but you supplied %d", len(gameIDs)),
+			Err: fmt.Sprintf("invalid request, max number of game ids is 100, but you supplied %d", len(gameIDs)),
 		}
 	}
 	if len(languages) > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, max number of languages is 100, but you supplied %d", len(languages)),
+			Err: fmt.Sprintf("invalid request, max number of languages is 100, but you supplied %d", len(languages)),
 		}
 	}
 	if len(userIDs) > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, max number of user ids is 100, but you supplied %d", len(userIDs)),
+			Err: fmt.Sprintf("invalid request, max number of user ids is 100, but you supplied %d", len(userIDs)),
 		}
 	}
 	if len(userLogins) > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, max number of user logins is 100, but you supplied %d", len(userLogins)),
+			Err: fmt.Sprintf("invalid request, max number of user logins is 100, but you supplied %d", len(userLogins)),
 		}
 	}
 
@@ -1028,16 +1028,16 @@ func (c *Client) GetFollowedStreams(userID, after string, count int) (*Streams, 
 	userID = strings.TrimSpace(userID)
 	if userID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 	params := make(map[string][]string)
@@ -1068,21 +1068,21 @@ func (c *Client) GetStreamMarkers(userID, videoID, before, after string, count i
 	videoID = strings.TrimSpace(videoID)
 	if userID == "" && videoID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, user id or video id must be set",
+			Err: "invalid request, user id or video id must be set",
 		}
 	}
 	if userID != "" && videoID != "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, only one of userID or videoID can be set",
+			Err: "invalid request, only one of userID or videoID can be set",
 		}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 
@@ -1120,16 +1120,16 @@ func (c *Client) GetBroadcasterSubscriptions(broadcasterID string, userIDs []str
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 
@@ -1164,12 +1164,12 @@ func (c *Client) CheckUserSubscription(broadcasterID, userID string) (*UserSubsc
 	userID = strings.TrimSpace(userID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if userID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, user can't be blank",
+			Err: "invalid request, user can't be blank",
 		}
 	}
 
@@ -1195,16 +1195,16 @@ func (c *Client) CheckUserSubscription(broadcasterID, userID string) (*UserSubsc
 func (c *Client) GetAllStreamTags(after string, count int, tagIDs []string) (*StreamTags, error) {
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 	if len(tagIDs) > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, max number of tag ids is 100, but you supplied %d", len(tagIDs)),
+			Err: fmt.Sprintf("invalid request, max number of tag ids is 100, but you supplied %d", len(tagIDs)),
 		}
 	}
 
@@ -1237,7 +1237,7 @@ func (c *Client) GetStreamTags(broadcasterID string) (*StreamTags, error) {
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	params := make(map[string][]string)
@@ -1262,7 +1262,7 @@ func (c *Client) GetChannelTeams(broadcasterID string) (*ChannelTeams, error) {
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 
@@ -1290,12 +1290,12 @@ func (c *Client) GetTeam(name, id string) (*Teams, error) {
 
 	if name == "" && id == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, name or id must be specified",
+			Err: "invalid request, name or id must be specified",
 		}
 	}
 	if name != "" && id != "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, only one of name or id may be specified",
+			Err: "invalid request, only one of name or id may be specified",
 		}
 	}
 	params := make(map[string][]string)
@@ -1322,12 +1322,12 @@ func (c *Client) GetTeam(name, id string) (*Teams, error) {
 func (c *Client) GetUsers(IDs, logins []string) (*Users, error) {
 	if len(IDs) == 0 && len(logins) == 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, login or id must be specified",
+			Err: "invalid request, login or id must be specified",
 		}
 	}
 	if len(IDs)+len(logins) > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, maximum of 100 ids and logins, but you supplied %d", len(IDs)+len(logins)),
+			Err: fmt.Sprintf("invalid request, maximum of 100 ids and logins, but you supplied %d", len(IDs)+len(logins)),
 		}
 	}
 
@@ -1358,18 +1358,18 @@ func (c *Client) GetUsersFollows(fromID, toID, after string, count int) (*UserFo
 	fromID = strings.TrimSpace(fromID)
 	toID = strings.TrimSpace(toID)
 	if fromID == "" && toID == "" {
-		return nil, gotau.BadRequestError{"invalid request, either fromID or toID must be specified"}
+		return nil, gotau.BadRequestError{Err: "invalid request, either fromID or toID must be specified"}
 	}
 	if fromID != "" && toID != "" {
-		return nil, gotau.BadRequestError{"invalid request, fromID or toID must be specified, but not both"}
+		return nil, gotau.BadRequestError{Err: "invalid request, fromID or toID must be specified, but not both"}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 
@@ -1405,16 +1405,16 @@ func (c *Client) GetUsersBlockList(broadcasterID, after string, count int) (*Use
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 
@@ -1483,12 +1483,12 @@ func (c *Client) GetUserActiveExtensions(userID string) (*UserActiveExtensions, 
 func (c *Client) GetVideosByID(ids []string) (*Video, error) {
 	if len(ids) == 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, at least one video id is required",
+			Err: "invalid request, at least one video id is required",
 		}
 	}
 	if len(ids) > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, maximum of 100 ids, but you supplied %d", len(ids)),
+			Err: fmt.Sprintf("invalid request, maximum of 100 ids, but you supplied %d", len(ids)),
 		}
 	}
 
@@ -1515,16 +1515,16 @@ func (c *Client) GetVideosByUser(userID, before, after, language string, count i
 	userID = strings.TrimSpace(userID)
 	if userID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, user id can't be blank",
+			Err: "invalid request, user id can't be blank",
 		}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 
@@ -1555,7 +1555,7 @@ func (c *Client) GetVideosByUser(userID, before, after, language string, count i
 			params["period"] = []string{period}
 		default:
 			return nil, gotau.BadRequestError{
-				fmt.Sprintf("invalid request, period can only all, day, week, month, or year, and you input %s", period),
+				Err: fmt.Sprintf("invalid request, period can only all, day, week, month, or year, and you input %s", period),
 			}
 		}
 	}
@@ -1570,7 +1570,7 @@ func (c *Client) GetVideosByUser(userID, before, after, language string, count i
 			params["sort"] = []string{sort}
 		default:
 			return nil, gotau.BadRequestError{
-				fmt.Sprintf("invalid request, sort can only be all, time, trending, or views, but you input %s", sort),
+				Err: fmt.Sprintf("invalid request, sort can only be all, time, trending, or views, but you input %s", sort),
 			}
 		}
 	}
@@ -1587,7 +1587,7 @@ func (c *Client) GetVideosByUser(userID, before, after, language string, count i
 			params["type"] = []string{_type}
 		default:
 			return nil, gotau.BadRequestError{
-				fmt.Sprintf("invalid request, type can only be all, upload, archive, or highlight, but you input %s", _type),
+				Err: fmt.Sprintf("invalid request, type can only be all, upload, archive, or highlight, but you input %s", _type),
 			}
 		}
 	}
@@ -1612,16 +1612,16 @@ func (c *Client) GetVideosByGame(gameID, before, after, language string, count i
 	gameID = strings.TrimSpace(gameID)
 	if gameID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, user id can't be blank",
+			Err: "invalid request, user id can't be blank",
 		}
 	}
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 
@@ -1652,7 +1652,7 @@ func (c *Client) GetVideosByGame(gameID, before, after, language string, count i
 			params["period"] = []string{period}
 		default:
 			return nil, gotau.BadRequestError{
-				fmt.Sprintf("invalid request, period can only all, day, week, month, or year, and you input %s", period),
+				Err: fmt.Sprintf("invalid request, period can only all, day, week, month, or year, and you input %s", period),
 			}
 		}
 	}
@@ -1667,7 +1667,7 @@ func (c *Client) GetVideosByGame(gameID, before, after, language string, count i
 			params["sort"] = []string{sort}
 		default:
 			return nil, gotau.BadRequestError{
-				fmt.Sprintf("invalid request, sort can only be all, time, trending, or views, but you input %s", sort),
+				Err: fmt.Sprintf("invalid request, sort can only be all, time, trending, or views, but you input %s", sort),
 			}
 		}
 	}
@@ -1684,7 +1684,7 @@ func (c *Client) GetVideosByGame(gameID, before, after, language string, count i
 			params["type"] = []string{_type}
 		default:
 			return nil, gotau.BadRequestError{
-				fmt.Sprintf("invalid request, type can only be all, upload, archive, or highlight, but you input %s", _type),
+				Err: fmt.Sprintf("invalid request, type can only be all, upload, archive, or highlight, but you input %s", _type),
 			}
 		}
 	}
@@ -1707,11 +1707,11 @@ func (c *Client) GetVideosByGame(gameID, before, after, language string, count i
 func (c *Client) GetWebhookSubscriptions(after string, count int) (*WebhookSubscriptions, error) {
 	if count > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 100, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 
@@ -1743,21 +1743,21 @@ func (c *Client) GetChannelStreamSchedule(broadcasterID string, IDs []string, st
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if len(IDs) > 100 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, maximum of 100 ids, but you supplied %d", len(IDs)),
+			Err: fmt.Sprintf("invalid request, maximum of 100 ids, but you supplied %d", len(IDs)),
 		}
 	}
 	if count > 25 {
 		return nil, gotau.BadRequestError{
-			fmt.Sprintf("invalid request, count maximum value is 25, but you supplied %d", count),
+			Err: fmt.Sprintf("invalid request, count maximum value is 25, but you supplied %d", count),
 		}
 	} else if count < 0 {
 		return nil, gotau.BadRequestError{
-			"invalid request, count can't be negative",
+			Err: "invalid request, count can't be negative",
 		}
 	}
 
@@ -1799,7 +1799,7 @@ func (c *Client) GetChannelStreamScheduleAsICal(broadcasterID string) ([]byte, e
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 

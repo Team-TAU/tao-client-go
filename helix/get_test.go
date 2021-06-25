@@ -51,17 +51,17 @@ func TestClient_GetTwitchUsersReturnsError(t *testing.T) {
 	ids := make([]string, 101)
 
 	result, err := client.GetTwitchUsers(users, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, get users only supports a maximum of 100 total logins " +
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, get users only supports a maximum of 100 total logins " +
 		"and ids combined."})
 	require.Nil(t, result)
 
 	result, err = client.GetTwitchUsers(nil, ids)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, get users only supports a maximum of 100 total logins " +
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, get users only supports a maximum of 100 total logins " +
 		"and ids combined."})
 	require.Nil(t, result)
 
 	result, err = client.GetTwitchUsers(users, ids)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, get users only supports a maximum of 100 total logins " +
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, get users only supports a maximum of 100 total logins " +
 		"and ids combined."})
 	require.Nil(t, result)
 }
@@ -70,15 +70,15 @@ func TestClient_GetBitsLeaderboardReturnsError(t *testing.T) {
 	client := Client{}
 
 	result, err := client.GetBitsLeaderboard(101, "", nil, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum value for count is 100 and you input 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum value for count is 100 and you input 101"})
 	require.Nil(t, result)
 
 	result, err = client.GetBitsLeaderboard(-1, "", nil, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can not be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can not be negative"})
 	require.Nil(t, result)
 
 	result, err = client.GetBitsLeaderboard(0, "decade", nil, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, period can only all, day, week, month, or year, and you input decade"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, period can only all, day, week, month, or year, and you input decade"})
 	require.Nil(t, result)
 }
 
@@ -320,15 +320,15 @@ func TestClient_GetChannelInformationReturnsError(t *testing.T) {
 	client := Client{}
 
 	result, err := client.GetChannelInformation("")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, result)
 
 	result, err = client.GetChannelInformation("   ")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, result)
 
 	result, err = client.GetChannelInformation("	")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, result)
 }
 
@@ -419,15 +419,15 @@ func TestClient_GetChannelEditorsReturnsError(t *testing.T) {
 	client := Client{}
 
 	result, err := client.GetChannelEditors("")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, result)
 
 	result, err = client.GetChannelEditors("   ")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, result)
 
 	result, err = client.GetChannelEditors("	")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, result)
 }
 
@@ -514,20 +514,20 @@ func TestClient_GetCustomRewardsReturnsError(t *testing.T) {
 	client := Client{}
 
 	result, err := client.GetCustomRewards("", nil, false)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, result)
 
 	result, err = client.GetCustomRewards("   ", nil, false)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, result)
 
 	result, err = client.GetCustomRewards("	", nil, false)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, result)
 
 	rewardIDs := make([]string, 51)
 	result, err = client.GetCustomRewards("12345", rewardIDs, false)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum number of rewardIDs is 50, but you input 51"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum number of rewardIDs is 50, but you input 51"})
 	require.Nil(t, result)
 }
 
@@ -709,51 +709,51 @@ func TestClient_GetCustomRewardRedemptionReturnsError(t *testing.T) {
 	client := Client{}
 
 	result, err := client.GetCustomRewardRedemption("", "", nil, "", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, result)
 
 	result, err = client.GetCustomRewardRedemption("    ", "", nil, "", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, result)
 
 	result, err = client.GetCustomRewardRedemption("	", "", nil, "", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, result)
 
 	result, err = client.GetCustomRewardRedemption("12345", "", nil, "", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, rewardID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, rewardID can't be blank"})
 	require.Nil(t, result)
 
 	result, err = client.GetCustomRewardRedemption("12345", "    ", nil, "", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, rewardID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, rewardID can't be blank"})
 	require.Nil(t, result)
 
 	result, err = client.GetCustomRewardRedemption("12345", "		", nil, "", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, rewardID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, rewardID can't be blank"})
 	require.Nil(t, result)
 
 	result, err = client.GetCustomRewardRedemption("12345", "67890", make([]string, 51), "", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum number of redemptionIDs is 50, but you input 51"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum number of redemptionIDs is 50, but you input 51"})
 	require.Nil(t, result)
 
 	result, err = client.GetCustomRewardRedemption("12345", "67890", nil, "", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, if there are no redemptionIDs, status must be set"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, if there are no redemptionIDs, status must be set"})
 	require.Nil(t, result)
 
 	result, err = client.GetCustomRewardRedemption("12345", "67890", nil, "foo", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, status can only be UNFULFILLED, FILFILLED, or CANCELED, but you input foo"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, status can only be UNFULFILLED, FILFILLED, or CANCELED, but you input foo"})
 	require.Nil(t, result)
 
 	result, err = client.GetCustomRewardRedemption("12345", "67890", nil, "UNFULFILLED", "bar", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, sort can only be OLDEST or NEWEST, but you input bar"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, sort can only be OLDEST or NEWEST, but you input bar"})
 	require.Nil(t, result)
 
 	result, err = client.GetCustomRewardRedemption("12345", "67890", nil, "UNFULFILLED", "NEWEST", "", 51)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum result count is 50, you input 51"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum result count is 50, you input 51"})
 	require.Nil(t, result)
 
 	result, err = client.GetCustomRewardRedemption("12345", "67890", nil, "UNFULFILLED", "NEWEST", "", -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, result)
 }
 
@@ -927,15 +927,15 @@ func TestClient_GetChannelChatBadgesReturnsError(t *testing.T) {
 	client := Client{}
 
 	result, err := client.GetChannelChatBadges("")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, result)
 
 	result, err = client.GetChannelChatBadges("    ")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, result)
 
 	result, err = client.GetChannelChatBadges("	")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, result)
 }
 
@@ -1105,43 +1105,43 @@ func TestClient_GetClipsXReturnsError(t *testing.T) {
 	client := Client{}
 
 	clips, err := client.GetClipsByBroadcaster("", "", "", nil, nil, 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, clips)
 
 	clips, err = client.GetClipsByBroadcaster("12345", "", "", nil, nil, 101)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count has a maximum of 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count has a maximum of 100, but you supplied 101"})
 	require.Nil(t, clips)
 
 	clips, err = client.GetClipsByBroadcaster("12345", "", "", nil, nil, -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count cannot be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count cannot be negative"})
 	require.Nil(t, clips)
 
 	clips, err = client.GetClipsByGame("", "", "", nil, nil, 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, gameID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, gameID can't be blank"})
 	require.Nil(t, clips)
 
 	clips, err = client.GetClipsByGame("12345", "", "", nil, nil, 101)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count has a maximum of 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count has a maximum of 100, but you supplied 101"})
 	require.Nil(t, clips)
 
 	clips, err = client.GetClipsByGame("12345", "", "", nil, nil, -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count cannot be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count cannot be negative"})
 	require.Nil(t, clips)
 
 	clips, err = client.GetClipsByID(nil, "", "", nil, nil, 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, clipID can't be empty"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, clipID can't be empty"})
 	require.Nil(t, clips)
 
 	clips, err = client.GetClipsByID(make([]string, 101), "", "", nil, nil, 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, clipID has a maximum of 100 but you supplied 101 ids"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, clipID has a maximum of 100 but you supplied 101 ids"})
 	require.Nil(t, clips)
 
 	clips, err = client.GetClipsByID(make([]string, 42), "", "", nil, nil, 101)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count has a maximum of 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count has a maximum of 100, but you supplied 101"})
 	require.Nil(t, clips)
 
 	clips, err = client.GetClipsByID(make([]string, 42), "", "", nil, nil, -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count cannot be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count cannot be negative"})
 	require.Nil(t, clips)
 }
 
@@ -1371,11 +1371,11 @@ func TestClient_GetTopGamesReturns200(t *testing.T) {
 func TestClient_GetTopGamesReturnsError(t *testing.T) {
 	client := Client{}
 	games, err := client.GetTopGames("", "", 101)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, games)
 
 	games, err = client.GetTopGames("", "", -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, games)
 }
 
@@ -1416,15 +1416,15 @@ func TestClient_GetGamesReturns200(t *testing.T) {
 func TestClient_GetGamesReturnsError(t *testing.T) {
 	client := Client{}
 	games, err := client.GetGames(nil, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, either id or names is necessary"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, either id or names is necessary"})
 	require.Nil(t, games)
 
 	games, err = client.GetGames(make([]string, 101), nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum number of games and ids is 100, you input 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum number of games and ids is 100, you input 101"})
 	require.Nil(t, games)
 
 	games, err = client.GetGames(nil, make([]string, 101))
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum number of games and ids is 100, you input 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum number of games and ids is 100, you input 101"})
 	require.Nil(t, games)
 }
 
@@ -1483,23 +1483,23 @@ func TestClient_GetHypeTrainEventsReturns200(t *testing.T) {
 func TestClient_GetHypeTrainEventsReturnsError(t *testing.T) {
 	client := Client{}
 	event, err := client.GetHypeTrainEvents("", 0, "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetHypeTrainEvents("    ", 0, "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetHypeTrainEvents("	", 0, "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetHypeTrainEvents("12345", 101, "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, event)
 
 	event, err = client.GetHypeTrainEvents("12345", -1, "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, event)
 }
 
@@ -1550,23 +1550,23 @@ func TestClient_GetBannedEventsReturns200(t *testing.T) {
 func TestClient_GetBannedEventsReturnsError(t *testing.T) {
 	client := Client{}
 	event, err := client.GetBannedEvents("", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetBannedEvents("    ", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetBannedEvents("	", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetBannedEvents("12345", "", "", 101)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, event)
 
 	event, err = client.GetBannedEvents("12345", "", "", -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, event)
 }
 
@@ -1600,27 +1600,27 @@ func TestClient_GetModeratorsReturns200(t *testing.T) {
 func TestClient_GetModeratorsReturnsError(t *testing.T) {
 	client := Client{}
 	event, err := client.GetModerators("", nil, "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetModerators("    ", nil, "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetModerators("	", nil, "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetModerators("12345", nil, "", 101)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, event)
 
 	event, err = client.GetModerators("12345", nil, "", -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, event)
 
 	event, err = client.GetModerators("12345", make([]string, 101), "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum user ids that can be supplied is 100 but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum user ids that can be supplied is 100 but you supplied 101"})
 	require.Nil(t, event)
 }
 
@@ -1668,27 +1668,27 @@ func TestClient_GetModeratorEventsReturns200(t *testing.T) {
 func TestClient_GetModeratorEventsReturnsError(t *testing.T) {
 	client := Client{}
 	event, err := client.GetModeratorEvents("", nil, "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetModeratorEvents("    ", nil, "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetModeratorEvents("	", nil, "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetModeratorEvents("12345", nil, "", 101)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, event)
 
 	event, err = client.GetModeratorEvents("12345", nil, "", -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, event)
 
 	event, err = client.GetModeratorEvents("12345", make([]string, 101), "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum user ids that can be supplied is 100 but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum user ids that can be supplied is 100 but you supplied 101"})
 	require.Nil(t, event)
 }
 
@@ -1745,27 +1745,27 @@ func TestClient_GetPollsReturns200(t *testing.T) {
 func TestClient_GetPollsReturnsError(t *testing.T) {
 	client := Client{}
 	event, err := client.GetPolls("", nil, "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetPolls("    ", nil, "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetPolls("	", nil, "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetPolls("12345", nil, "", 21)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 20, but you supplied 21"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 20, but you supplied 21"})
 	require.Nil(t, event)
 
 	event, err = client.GetPolls("12345", nil, "", -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, event)
 
 	event, err = client.GetPolls("12345", make([]string, 101), "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum ids that can be supplied is 100 but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum ids that can be supplied is 100 but you supplied 101"})
 	require.Nil(t, event)
 }
 
@@ -1813,27 +1813,27 @@ func TestClient_GetPredictionsReturns200(t *testing.T) {
 func TestClient_GetPredictionsReturnsError(t *testing.T) {
 	client := Client{}
 	event, err := client.GetPredictions("", nil, "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetPredictions("    ", nil, "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetPredictions("	", nil, "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetPredictions("12345", nil, "", 21)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 20, but you supplied 21"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 20, but you supplied 21"})
 	require.Nil(t, event)
 
 	event, err = client.GetPredictions("12345", nil, "", -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, event)
 
 	event, err = client.GetPredictions("12345", make([]string, 101), "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum ids that can be supplied is 100 but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum ids that can be supplied is 100 but you supplied 101"})
 	require.Nil(t, event)
 }
 
@@ -1873,23 +1873,23 @@ func TestClient_SearchCategoriesReturns200(t *testing.T) {
 func TestClient_SearchCategoriesReturnsError(t *testing.T) {
 	client := Client{}
 	event, err := client.SearchCategories("", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, query can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, query can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.SearchCategories("    ", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, query can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, query can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.SearchCategories("	", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, query can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, query can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.SearchCategories("12345", "", 101)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, event)
 
 	event, err = client.SearchCategories("12345", "", -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, event)
 }
 
@@ -1937,23 +1937,23 @@ func TestClient_SearchChannelsReturns200(t *testing.T) {
 func TestClient_SearchChannelsReturnsError(t *testing.T) {
 	client := Client{}
 	event, err := client.SearchChannels("", "", 0, false)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, query can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, query can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.SearchChannels("    ", "", 0, false)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, query can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, query can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.SearchChannels("	", "", 0, false)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, query can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, query can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.SearchChannels("12345", "", 101, false)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, event)
 
 	event, err = client.SearchChannels("12345", "", -1, false)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, event)
 }
 
@@ -1989,15 +1989,15 @@ func TestClient_GetStreamKeyReturns200(t *testing.T) {
 func TestClient_GetStreamKeyReturnsError(t *testing.T) {
 	client := Client{}
 	event, err := client.GetStreamKey("")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetStreamKey("    ")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 
 	event, err = client.GetStreamKey("		")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, event)
 }
 
@@ -2049,27 +2049,27 @@ func TestClient_GetStreamsReturnsError(t *testing.T) {
 	client := Client{}
 
 	streams, err := client.GetStreams("", "", 101, nil, nil, nil, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, streams)
 
 	streams, err = client.GetStreams("", "", -1, nil, nil, nil, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, streams)
 
 	streams, err = client.GetStreams("", "", 0, make([]string, 101), nil, nil, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, max number of game ids is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, max number of game ids is 100, but you supplied 101"})
 	require.Nil(t, streams)
 
 	streams, err = client.GetStreams("", "", 0, nil, make([]string, 101), nil, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, max number of languages is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, max number of languages is 100, but you supplied 101"})
 	require.Nil(t, streams)
 
 	streams, err = client.GetStreams("", "", 0, nil, nil, make([]string, 101), nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, max number of user ids is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, max number of user ids is 100, but you supplied 101"})
 	require.Nil(t, streams)
 
 	streams, err = client.GetStreams("", "", 0, nil, nil, nil, make([]string, 101))
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, max number of user logins is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, max number of user logins is 100, but you supplied 101"})
 	require.Nil(t, streams)
 }
 
@@ -2120,23 +2120,23 @@ func TestClient_GetFollowedStreamsReturnsError(t *testing.T) {
 	client := Client{}
 
 	streams, err := client.GetFollowedStreams("", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, streams)
 
 	streams, err = client.GetFollowedStreams("    ", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, streams)
 
 	streams, err = client.GetFollowedStreams("	", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, streams)
 
 	streams, err = client.GetFollowedStreams("12345", "", 101)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, streams)
 
 	streams, err = client.GetFollowedStreams("12345", "", -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, streams)
 }
 
@@ -2187,27 +2187,27 @@ func TestClient_GetStreamMarkersReturnsError(t *testing.T) {
 	client := Client{}
 
 	markers, err := client.GetStreamMarkers("", "", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, user id or video id must be set"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, user id or video id must be set"})
 	require.Nil(t, markers)
 
 	markers, err = client.GetStreamMarkers(" ", " ", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, user id or video id must be set"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, user id or video id must be set"})
 	require.Nil(t, markers)
 
 	markers, err = client.GetStreamMarkers("		", "	", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, user id or video id must be set"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, user id or video id must be set"})
 	require.Nil(t, markers)
 
 	markers, err = client.GetStreamMarkers("123", "456", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, only one of userID or videoID can be set"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, only one of userID or videoID can be set"})
 	require.Nil(t, markers)
 
 	markers, err = client.GetStreamMarkers("123", "", "", "", 101)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, markers)
 
 	markers, err = client.GetStreamMarkers("123", "", "", "", -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, markers)
 }
 
@@ -2258,23 +2258,23 @@ func TestClient_GetBroadcasterSubscriptionsReturnsError(t *testing.T) {
 	client := Client{}
 
 	subs, err := client.GetBroadcasterSubscriptions("", nil, "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, subs)
 
 	subs, err = client.GetBroadcasterSubscriptions("    ", nil, "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, subs)
 
 	subs, err = client.GetBroadcasterSubscriptions("	", nil, "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, subs)
 
 	subs, err = client.GetBroadcasterSubscriptions("123", nil, "", 101)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, subs)
 
 	subs, err = client.GetBroadcasterSubscriptions("123", nil, "", -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, subs)
 }
 
@@ -2319,11 +2319,11 @@ func TestClient_CheckUserSubscriptionReturnsError(t *testing.T) {
 	client := Client{}
 
 	subs, err := client.CheckUserSubscription("", "123")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, subs)
 
 	subs, err = client.CheckUserSubscription("123", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, user can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, user can't be blank"})
 	require.Nil(t, subs)
 }
 
@@ -2368,15 +2368,15 @@ func TestClient_GetAllStreamTagsReturnsError(t *testing.T) {
 	client := Client{}
 
 	tags, err := client.GetAllStreamTags("", 101, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, tags)
 
 	tags, err = client.GetAllStreamTags("", -1, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, tags)
 
 	tags, err = client.GetAllStreamTags("", 0, make([]string, 101))
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, max number of tag ids is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, max number of tag ids is 100, but you supplied 101"})
 	require.Nil(t, tags)
 }
 
@@ -2419,15 +2419,15 @@ func TestClient_GetStreamTagsReturnsError(t *testing.T) {
 	client := Client{}
 
 	tags, err := client.GetStreamTags("")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, tags)
 
 	tags, err = client.GetStreamTags("    ")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, tags)
 
 	tags, err = client.GetStreamTags("		")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, tags)
 }
 
@@ -2473,15 +2473,15 @@ func TestClient_GetChannelTeamsReturnsError(t *testing.T) {
 	client := Client{}
 
 	teams, err := client.GetChannelTeams("")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, teams)
 
 	teams, err = client.GetChannelTeams("    ")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, teams)
 
 	teams, err = client.GetChannelTeams("		")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, teams)
 }
 
@@ -2529,19 +2529,19 @@ func TestClient_GetTeamReturnsError(t *testing.T) {
 	client := Client{}
 
 	teams, err := client.GetTeam("", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, name or id must be specified"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, name or id must be specified"})
 	require.Nil(t, teams)
 
 	teams, err = client.GetTeam("  ", "  ")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, name or id must be specified"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, name or id must be specified"})
 	require.Nil(t, teams)
 
 	teams, err = client.GetTeam("		", "	")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, name or id must be specified"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, name or id must be specified"})
 	require.Nil(t, teams)
 
 	teams, err = client.GetTeam("foo", "bar")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, only one of name or id may be specified"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, only one of name or id may be specified"})
 	require.Nil(t, teams)
 }
 
@@ -2587,19 +2587,19 @@ func TestClient_GetUsersReturnsError(t *testing.T) {
 	client := Client{}
 
 	users, err := client.GetUsers(nil, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, login or id must be specified"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, login or id must be specified"})
 	require.Nil(t, users)
 
 	users, err = client.GetUsers(make([]string, 101), nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum of 100 ids and logins, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum of 100 ids and logins, but you supplied 101"})
 	require.Nil(t, users)
 
 	users, err = client.GetUsers(nil, make([]string, 101))
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum of 100 ids and logins, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum of 100 ids and logins, but you supplied 101"})
 	require.Nil(t, users)
 
 	users, err = client.GetUsers(make([]string, 101), make([]string, 101))
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum of 100 ids and logins, but you supplied 202"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum of 100 ids and logins, but you supplied 202"})
 	require.Nil(t, users)
 }
 
@@ -2643,19 +2643,19 @@ func TestClient_GetUsersFollowsReturnsError(t *testing.T) {
 	client := Client{}
 
 	followers, err := client.GetUsersFollows("", "", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, either fromID or toID must be specified"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, either fromID or toID must be specified"})
 	require.Nil(t, followers)
 
 	followers, err = client.GetUsersFollows("foo", "bar", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, fromID or toID must be specified, but not both"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, fromID or toID must be specified, but not both"})
 	require.Nil(t, followers)
 
 	followers, err = client.GetUsersFollows("1234", "", "", 101)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, followers)
 
 	followers, err = client.GetUsersFollows("1234", "", "", -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, followers)
 }
 
@@ -2694,23 +2694,23 @@ func TestClient_GetUsersBlockListReturnsError(t *testing.T) {
 	client := Client{}
 
 	blocklist, err := client.GetUsersBlockList("", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, blocklist)
 
 	blocklist, err = client.GetUsersBlockList("    ", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, blocklist)
 
 	blocklist, err = client.GetUsersBlockList("	", "", 0)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, blocklist)
 
 	blocklist, err = client.GetUsersBlockList("1234", "", 101)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, blocklist)
 
 	blocklist, err = client.GetUsersBlockList("1234", "", -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, blocklist)
 }
 
@@ -2845,15 +2845,15 @@ func TestClient_GetVideosByIDReturnsError(t *testing.T) {
 	client := Client{}
 
 	videos, err := client.GetVideosByID(nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, at least one video id is required"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, at least one video id is required"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByID(make([]string, 0))
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, at least one video id is required"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, at least one video id is required"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByID(make([]string, 101))
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum of 100 ids, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum of 100 ids, but you supplied 101"})
 	require.Nil(t, videos)
 }
 
@@ -2908,35 +2908,35 @@ func TestClient_GetVideosByUserReturnsError(t *testing.T) {
 	client := Client{}
 
 	videos, err := client.GetVideosByUser("", "", "", "", 0, "", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, user id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, user id can't be blank"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByUser("    ", "", "", "", 0, "", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, user id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, user id can't be blank"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByUser("	", "", "", "", 0, "", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, user id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, user id can't be blank"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByUser("1234", "", "", "", 101, "", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByUser("1234", "", "", "", -1, "", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByUser("1234", "", "", "", 0, "decade", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, period can only all, day, week, month, or year, and you input decade"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, period can only all, day, week, month, or year, and you input decade"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByUser("1234", "", "", "", 0, "", "foo", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, sort can only be all, time, trending, or views, but you input foo"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, sort can only be all, time, trending, or views, but you input foo"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByUser("1234", "", "", "", 0, "", "", "foo")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, type can only be all, upload, archive, or highlight, but you input foo"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, type can only be all, upload, archive, or highlight, but you input foo"})
 	require.Nil(t, videos)
 }
 
@@ -2991,35 +2991,35 @@ func TestClient_GetVideosByGameReturnsError(t *testing.T) {
 	client := Client{}
 
 	videos, err := client.GetVideosByGame("", "", "", "", 0, "", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, user id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, user id can't be blank"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByGame("    ", "", "", "", 0, "", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, user id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, user id can't be blank"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByGame("	", "", "", "", 0, "", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, user id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, user id can't be blank"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByGame("1234", "", "", "", 101, "", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByGame("1234", "", "", "", -1, "", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByGame("1234", "", "", "", 0, "decade", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, period can only all, day, week, month, or year, and you input decade"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, period can only all, day, week, month, or year, and you input decade"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByGame("1234", "", "", "", 0, "", "foo", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, sort can only be all, time, trending, or views, but you input foo"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, sort can only be all, time, trending, or views, but you input foo"})
 	require.Nil(t, videos)
 
 	videos, err = client.GetVideosByGame("1234", "", "", "", 0, "", "", "foo")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, type can only be all, upload, archive, or highlight, but you input foo"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, type can only be all, upload, archive, or highlight, but you input foo"})
 	require.Nil(t, videos)
 }
 
@@ -3059,11 +3059,11 @@ func TestClient_GetWebhookSubscriptionsReturnsError(t *testing.T) {
 	client := Client{}
 
 	subs, err := client.GetWebhookSubscriptions("", 101)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 100, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 100, but you supplied 101"})
 	require.Nil(t, subs)
 
 	subs, err = client.GetWebhookSubscriptions("", -1)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, subs)
 }
 
@@ -3112,27 +3112,27 @@ func TestClient_GetChannelStreamScheduleReturnsError(t *testing.T) {
 	client := Client{}
 
 	schedule, err := client.GetChannelStreamSchedule("", nil, nil, 0, 0, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, schedule)
 
 	schedule, err = client.GetChannelStreamSchedule("    ", nil, nil, 0, 0, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, schedule)
 
 	schedule, err = client.GetChannelStreamSchedule("		", nil, nil, 0, 0, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, schedule)
 
 	schedule, err = client.GetChannelStreamSchedule("123", make([]string, 101), nil, 0, 0, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum of 100 ids, but you supplied 101"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum of 100 ids, but you supplied 101"})
 	require.Nil(t, schedule)
 
 	schedule, err = client.GetChannelStreamSchedule("123", nil, nil, 0, 26, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count maximum value is 25, but you supplied 26"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count maximum value is 25, but you supplied 26"})
 	require.Nil(t, schedule)
 
 	schedule, err = client.GetChannelStreamSchedule("123", nil, nil, 0, -1, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, count can't be negative"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, count can't be negative"})
 	require.Nil(t, schedule)
 }
 
@@ -3167,14 +3167,14 @@ func TestClient_GetChannelStreamScheduleAsICalReturnsError(t *testing.T) {
 	client := Client{}
 
 	schedule, err := client.GetChannelStreamScheduleAsICal("")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, schedule)
 
 	schedule, err = client.GetChannelStreamScheduleAsICal("    ")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, schedule)
 
 	schedule, err = client.GetChannelStreamScheduleAsICal("		")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, schedule)
 }

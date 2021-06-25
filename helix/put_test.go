@@ -139,19 +139,19 @@ func TestClient_ReplaceStreamTagsReturnsError(t *testing.T) {
 	client := Client{}
 
 	replaced, err := client.ReplaceStreamTags("", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.False(t, replaced)
 
 	replaced, err = client.ReplaceStreamTags("    ", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.False(t, replaced)
 
 	replaced, err = client.ReplaceStreamTags("		", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.False(t, replaced)
 
 	replaced, err = client.ReplaceStreamTags("123", make([]string, 6))
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum of 5 tags can be set"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum of 5 tags can be set"})
 	require.False(t, replaced)
 }
 

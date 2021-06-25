@@ -142,19 +142,19 @@ func TestClient_ModifyChannelInformationReturnsError(t *testing.T) {
 	client := Client{}
 
 	changed, err := client.ModifyChannelInformation("", nil, nil, nil, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.False(t, changed)
 
 	changed, err = client.ModifyChannelInformation("    ", nil, nil, nil, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.False(t, changed)
 
 	changed, err = client.ModifyChannelInformation("		", nil, nil, nil, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.False(t, changed)
 
 	changed, err = client.ModifyChannelInformation("1234", nil, nil, nil, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, at least one parameter must be provided of gameID, language, title, and delay"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, at least one parameter must be provided of gameID, language, title, and delay"})
 	require.False(t, changed)
 }
 
@@ -228,31 +228,31 @@ func TestClient_UpdateCustomRewardReturnsError(t *testing.T) {
 	client := Client{}
 
 	reward, err := client.UpdateCustomReward("", "123", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, reward)
 
 	reward, err = client.UpdateCustomReward("    ", "123", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, reward)
 
 	reward, err = client.UpdateCustomReward("		", "123", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, reward)
 
 	reward, err = client.UpdateCustomReward("123", "", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, ID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, ID can't be blank"})
 	require.Nil(t, reward)
 
 	reward, err = client.UpdateCustomReward("123", "    ", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, ID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, ID can't be blank"})
 	require.Nil(t, reward)
 
 	reward, err = client.UpdateCustomReward("123", "		", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, ID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, ID can't be blank"})
 	require.Nil(t, reward)
 
 	reward, err = client.UpdateCustomReward("123", "456", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, change can't be nil"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, change can't be nil"})
 	require.Nil(t, reward)
 }
 
@@ -317,43 +317,43 @@ func TestClient_UpdateRedemptionStatusReturnsError(t *testing.T) {
 	client := Client{}
 
 	redemptions, err := client.UpdateRedemptionStatus("", "", nil, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, redemptions)
 
 	redemptions, err = client.UpdateRedemptionStatus("    ", "", nil, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, redemptions)
 
 	redemptions, err = client.UpdateRedemptionStatus("		", "", nil, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, redemptions)
 
 	redemptions, err = client.UpdateRedemptionStatus("123", "", nil, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, rewardID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, rewardID can't be blank"})
 	require.Nil(t, redemptions)
 
 	redemptions, err = client.UpdateRedemptionStatus("123", "   ", nil, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, rewardID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, rewardID can't be blank"})
 	require.Nil(t, redemptions)
 
 	redemptions, err = client.UpdateRedemptionStatus("123", "		", nil, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, rewardID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, rewardID can't be blank"})
 	require.Nil(t, redemptions)
 
 	redemptions, err = client.UpdateRedemptionStatus("123", "456", nil, "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, redemptionIDs can't be empty or nil"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, redemptionIDs can't be empty or nil"})
 	require.Nil(t, redemptions)
 
 	redemptions, err = client.UpdateRedemptionStatus("123", "456", make([]string, 0), "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, redemptionIDs can't be empty or nil"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, redemptionIDs can't be empty or nil"})
 	require.Nil(t, redemptions)
 
 	redemptions, err = client.UpdateRedemptionStatus("123", "456", make([]string, 51), "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request,  maximum of 50 redemptionIDs, but you supplied 51"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request,  maximum of 50 redemptionIDs, but you supplied 51"})
 	require.Nil(t, redemptions)
 
 	redemptions, err = client.UpdateRedemptionStatus("123", "456", make([]string, 25), "foo")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request,  status can only be one of FULFILLED or CANCELED"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request,  status can only be one of FULFILLED or CANCELED"})
 	require.Nil(t, redemptions)
 }
 
@@ -423,29 +423,29 @@ func TestClient_UpdateChannelStreamScheduleReturnsError(t *testing.T) {
 	client := Client{}
 
 	changed, err := client.UpdateChannelStreamSchedule("", nil, nil, nil, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.False(t, changed)
 
 	changed, err = client.UpdateChannelStreamSchedule("    ", nil, nil, nil, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.False(t, changed)
 
 	changed, err = client.UpdateChannelStreamSchedule("	", nil, nil, nil, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.False(t, changed)
 
 	vacationEnabled := true
 	now := time.Now()
 	changed, err = client.UpdateChannelStreamSchedule("123", &vacationEnabled, nil, nil, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, if vacationEnabled, vacationStartTime must be specified"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, if vacationEnabled, vacationStartTime must be specified"})
 	require.False(t, changed)
 
 	changed, err = client.UpdateChannelStreamSchedule("123", &vacationEnabled, &now, nil, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, if vacationEnabled, vacationEndTime must be specified"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, if vacationEnabled, vacationEndTime must be specified"})
 	require.False(t, changed)
 
 	changed, err = client.UpdateChannelStreamSchedule("123", &vacationEnabled, &now, &now, nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, if vacationEnabled, timezone must be specified"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, if vacationEnabled, timezone must be specified"})
 	require.False(t, changed)
 }
 
@@ -505,31 +505,31 @@ func TestClient_UpdateChannelStreamScheduleSegmentReturnsError(t *testing.T) {
 	client := Client{}
 
 	segment, err := client.UpdateChannelStreamScheduleSegment("", "", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, segment)
 
 	segment, err = client.UpdateChannelStreamScheduleSegment("    ", "", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, segment)
 
 	segment, err = client.UpdateChannelStreamScheduleSegment("		", "", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, segment)
 
 	segment, err = client.UpdateChannelStreamScheduleSegment("1234", "", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, segment id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, segment id can't be blank"})
 	require.Nil(t, segment)
 
 	segment, err = client.UpdateChannelStreamScheduleSegment("1234", "    ", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, segment id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, segment id can't be blank"})
 	require.Nil(t, segment)
 
 	segment, err = client.UpdateChannelStreamScheduleSegment("1234", "	", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, segment id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, segment id can't be blank"})
 	require.Nil(t, segment)
 
 	segment, err = client.UpdateChannelStreamScheduleSegment("1234", "5678", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, update can't be nil"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, update can't be nil"})
 	require.Nil(t, segment)
 }
 
@@ -592,39 +592,39 @@ func TestClient_EndPollReturnsError(t *testing.T) {
 	client := Client{}
 
 	poll, err := client.EndPoll("", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, poll)
 
 	poll, err = client.EndPoll("    ", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, poll)
 
 	poll, err = client.EndPoll("		", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, poll)
 
 	poll, err = client.EndPoll("1234", "", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, poll id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, poll id can't be blank"})
 	require.Nil(t, poll)
 
 	poll, err = client.EndPoll("1234", "    ", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, poll id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, poll id can't be blank"})
 	require.Nil(t, poll)
 
 	poll, err = client.EndPoll("1234", "	", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, poll id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, poll id can't be blank"})
 	require.Nil(t, poll)
 
 	poll, err = client.EndPoll("1234", "5678", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, status must either be TERMINATED or ARCHIVED"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, status must either be TERMINATED or ARCHIVED"})
 	require.Nil(t, poll)
 
 	poll, err = client.EndPoll("1234", "5678", "    ")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, status must either be TERMINATED or ARCHIVED"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, status must either be TERMINATED or ARCHIVED"})
 	require.Nil(t, poll)
 
 	poll, err = client.EndPoll("1234", "5678", "		")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, status must either be TERMINATED or ARCHIVED"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, status must either be TERMINATED or ARCHIVED"})
 	require.Nil(t, poll)
 }
 
@@ -702,42 +702,42 @@ func TestClient_EndPredictionReturnsError(t *testing.T) {
 	client := Client{}
 
 	prediction, err := client.EndPrediction("", "", "", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, prediction)
 
 	prediction, err = client.EndPrediction("    ", "", "", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, prediction)
 
 	prediction, err = client.EndPrediction("		", "", "", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcast can't be blank"})
 	require.Nil(t, prediction)
 
 	prediction, err = client.EndPrediction("1234", "", "", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, prediction id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, prediction id can't be blank"})
 	require.Nil(t, prediction)
 
 	prediction, err = client.EndPrediction("1234", "    ", "", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, prediction id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, prediction id can't be blank"})
 	require.Nil(t, prediction)
 
 	prediction, err = client.EndPrediction("1234", "	", "", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, prediction id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, prediction id can't be blank"})
 	require.Nil(t, prediction)
 
 	prediction, err = client.EndPrediction("1234", "5678", "", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, status must either be RESOLVED, CANCELED, or LOCKED"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, status must either be RESOLVED, CANCELED, or LOCKED"})
 	require.Nil(t, prediction)
 
 	prediction, err = client.EndPrediction("1234", "5678", "    ", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, status must either be RESOLVED, CANCELED, or LOCKED"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, status must either be RESOLVED, CANCELED, or LOCKED"})
 	require.Nil(t, prediction)
 
 	prediction, err = client.EndPrediction("1234", "5678", "		", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, status must either be RESOLVED, CANCELED, or LOCKED"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, status must either be RESOLVED, CANCELED, or LOCKED"})
 	require.Nil(t, prediction)
 
 	prediction, err = client.EndPrediction("1234", "5678", "RESOLVED", nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, if status RESOLVED, winning outcome must be set"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, if status RESOLVED, winning outcome must be set"})
 	require.Nil(t, prediction)
 }

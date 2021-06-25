@@ -18,12 +18,12 @@ func (c *Client) CreateCustomReward(broadcasterID string, customReward *CustomRe
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if customReward == nil {
 		return nil, gotau.BadRequestError{
-			"invalid request, custom reward can't be nil",
+			Err: "invalid request, custom reward can't be nil",
 		}
 	}
 	params := map[string][]string{
@@ -59,7 +59,7 @@ func (c *Client) CreateClip(broadcasterID string, hasDelay bool) (string, string
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return "", "", gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 
@@ -91,7 +91,7 @@ func (c *Client) CreateClip(broadcasterID string, hasDelay bool) (string, string
 func (c *Client) CreatePoll(poll *CreatePoll) (*Polls, error) {
 	if poll == nil {
 		return nil, gotau.BadRequestError{
-			"invalid request, poll can't be nil",
+			Err: "invalid request, poll can't be nil",
 		}
 	}
 
@@ -119,7 +119,7 @@ func (c *Client) CreatePoll(poll *CreatePoll) (*Polls, error) {
 func (c *Client) CreatePrediction(prediction *CreatePrediction) (*Predictions, error) {
 	if prediction == nil {
 		return nil, gotau.BadRequestError{
-			"invalid request, prediction can't be nil",
+			Err: "invalid request, prediction can't be nil",
 		}
 	}
 
@@ -148,12 +148,12 @@ func (c *Client) CreateChannelStreamScheduleSegment(broadcasterID string, segmen
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, broadcast can't be blank",
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if segment == nil {
 		return nil, gotau.BadRequestError{
-			"invalid request, segment can't be nil",
+			Err: "invalid request, segment can't be nil",
 		}
 	}
 
@@ -187,12 +187,12 @@ func (c *Client) CreateUserFollows(fromID, toID string, allowNotifications bool)
 
 	if fromID == "" {
 		return false, gotau.BadRequestError{
-			"invalid request, from id can't be blank",
+			Err: "invalid request, from id can't be blank",
 		}
 	}
 	if toID == "" {
 		return false, gotau.BadRequestError{
-			"invalid request, to id can't be blank",
+			Err: "invalid request, to id can't be blank",
 		}
 	}
 
@@ -226,7 +226,7 @@ func (c *Client) StartCommercial(broadcasterID string, length int) (*Commercial,
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
 		return nil, gotau.BadRequestError{
-			"invalid request, from id can't be blank",
+			Err: "invalid request, from id can't be blank",
 		}
 	}
 
@@ -249,7 +249,7 @@ func (c *Client) StartCommercial(broadcasterID string, length int) (*Commercial,
 		commercialData.Length = length
 	default:
 		return nil, gotau.BadRequestError{
-			"invalid request, valid length values are 30, 60, 90, 120, 150, 180",
+			Err: "invalid request, valid length values are 30, 60, 90, 120, 150, 180",
 		}
 	}
 

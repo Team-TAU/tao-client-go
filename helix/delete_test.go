@@ -152,11 +152,11 @@ func TestClient_DeleteCustomRewardReturnsError(t *testing.T) {
 	client := Client{}
 
 	deleted, err := client.DeleteCustomReward("", "123")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcaster can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcaster can't be blank"})
 	require.False(t, deleted)
 
 	deleted, err = client.DeleteCustomReward("123", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, ID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, ID can't be blank"})
 	require.False(t, deleted)
 }
 
@@ -189,15 +189,15 @@ func TestClient_DeleteEventSubSubscriptionReturnsError(t *testing.T) {
 	client := Client{}
 
 	deleted, err := client.DeleteEventSubSubscription("")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, ID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, ID can't be blank"})
 	require.False(t, deleted)
 
 	deleted, err = client.DeleteEventSubSubscription("    ")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, ID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, ID can't be blank"})
 	require.False(t, deleted)
 
 	deleted, err = client.DeleteEventSubSubscription("		")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, ID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, ID can't be blank"})
 	require.False(t, deleted)
 }
 
@@ -231,27 +231,27 @@ func TestClient_DeleteUserFollowsReturnsError(t *testing.T) {
 	client := Client{}
 
 	deleted, err := client.DeleteUserFollows("", "123")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, fromID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, fromID can't be blank"})
 	require.False(t, deleted)
 
 	deleted, err = client.DeleteUserFollows("    ", "123")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, fromID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, fromID can't be blank"})
 	require.False(t, deleted)
 
 	deleted, err = client.DeleteUserFollows("		", "123")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, fromID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, fromID can't be blank"})
 	require.False(t, deleted)
 
 	deleted, err = client.DeleteUserFollows("123", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, toID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, toID can't be blank"})
 	require.False(t, deleted)
 
 	deleted, err = client.DeleteUserFollows("123", "    ")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, toID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, toID can't be blank"})
 	require.False(t, deleted)
 
 	deleted, err = client.DeleteUserFollows("123", "	")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, toID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, toID can't be blank"})
 	require.False(t, deleted)
 }
 
@@ -284,15 +284,15 @@ func TestClient_UnblockUserReturnsError(t *testing.T) {
 	client := Client{}
 
 	deleted, err := client.UnblockUser("")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, userID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, userID can't be blank"})
 	require.False(t, deleted)
 
 	deleted, err = client.UnblockUser("    ")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, userID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, userID can't be blank"})
 	require.False(t, deleted)
 
 	deleted, err = client.UnblockUser("		")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, userID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, userID can't be blank"})
 	require.False(t, deleted)
 }
 
@@ -325,15 +325,15 @@ func TestClient_DeleteVideosReturnsError(t *testing.T) {
 	client := Client{}
 
 	deleted, err := client.DeleteVideos(nil)
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, IDs can't be empty"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, IDs can't be empty"})
 	require.False(t, deleted)
 
 	deleted, err = client.DeleteVideos(make([]string, 0))
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, IDs can't be empty"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, IDs can't be empty"})
 	require.False(t, deleted)
 
 	deleted, err = client.DeleteVideos(make([]string, 6))
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum number of IDs is 5 but you supplied 6"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, maximum number of IDs is 5 but you supplied 6"})
 	require.False(t, deleted)
 }
 
@@ -367,26 +367,26 @@ func TestClient_DeleteChannelStreamScheduleSegmentReturnsError(t *testing.T) {
 	client := Client{}
 
 	deleted, err := client.DeleteChannelStreamScheduleSegment("", "123")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcaster can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcaster can't be blank"})
 	require.False(t, deleted)
 
 	deleted, err = client.DeleteChannelStreamScheduleSegment("    ", "123")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcaster can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcaster can't be blank"})
 	require.False(t, deleted)
 
 	deleted, err = client.DeleteChannelStreamScheduleSegment("		", "123")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcaster can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, broadcaster can't be blank"})
 	require.False(t, deleted)
 
 	deleted, err = client.DeleteChannelStreamScheduleSegment("123", "")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, ID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, ID can't be blank"})
 	require.False(t, deleted)
 
 	deleted, err = client.DeleteChannelStreamScheduleSegment("123", "    ")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, ID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, ID can't be blank"})
 	require.False(t, deleted)
 
 	deleted, err = client.DeleteChannelStreamScheduleSegment("123", "	")
-	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, ID can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{Err: "invalid request, ID can't be blank"})
 	require.False(t, deleted)
 }
