@@ -2,6 +2,7 @@ package helix
 
 import (
 	"encoding/json"
+	gotau "github.com/Team-TAU/tau-client-go"
 	"strings"
 )
 
@@ -14,12 +15,12 @@ func (c *Client) PutRequest(endpoint string, params map[string][]string, body []
 func (c *Client) ReplaceStreamTags(broadcasterID string, tags []string) (bool, error) {
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
-		return false, BadRequestError{
+		return false, gotau.BadRequestError{
 			"invalid request, broadcast can't be blank",
 		}
 	}
 	if len(tags) > 5 {
-		return false, BadRequestError{
+		return false, gotau.BadRequestError{
 			"invalid request, maximum of 5 tags can be set",
 		}
 	}

@@ -7,7 +7,7 @@ import (
 
 func TestAuthorizationError_Error(t *testing.T) {
 	err := AuthorizationError{
-		err: "User unauthorized",
+		Err: "User unauthorized",
 	}
 
 	require.Error(t, err)
@@ -16,7 +16,7 @@ func TestAuthorizationError_Error(t *testing.T) {
 
 func TestBadRequestError_Error(t *testing.T) {
 	err := BadRequestError{
-		err: "Malformed request",
+		Err: "Malformed request",
 	}
 
 	require.Error(t, err)
@@ -25,7 +25,7 @@ func TestBadRequestError_Error(t *testing.T) {
 
 func TestGenericError_Error(t *testing.T) {
 	err := GenericError{
-		err: "Generic Error",
+		Err: "Generic Error",
 	}
 
 	require.Error(t, err)

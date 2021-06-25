@@ -3,6 +3,7 @@ package helix
 import (
 	"encoding/json"
 	"fmt"
+	gotau "github.com/Team-TAU/tau-client-go"
 	"github.com/stretchr/testify/require"
 	"io/ioutil"
 	"net"
@@ -35,7 +36,7 @@ func TestClient_PostRequestReturnsAuthError(t *testing.T) {
 	require.NotNil(t, client)
 
 	shouldBeNil, err := client.PostRequest("channels", nil, nil)
-	require.ErrorIs(t, err, AuthorizationError{})
+	require.ErrorIs(t, err, gotau.AuthorizationError{})
 	require.Nil(t, shouldBeNil)
 }
 
@@ -61,7 +62,7 @@ func TestClient_PostRequestReturnsGenericError(t *testing.T) {
 
 	shouldBeNil, err := client.PostRequest("channels", nil, nil)
 	require.Error(t, err)
-	require.IsType(t, GenericError{}, err)
+	require.IsType(t, gotau.GenericError{}, err)
 	require.Nil(t, shouldBeNil)
 }
 
@@ -173,19 +174,19 @@ func TestClient_CreateCustomRewardReturnsError(t *testing.T) {
 	client := Client{}
 
 	reward, err := client.CreateCustomReward("", nil)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
 	require.Nil(t, reward)
 
 	reward, err = client.CreateCustomReward("    ", nil)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
 	require.Nil(t, reward)
 
 	reward, err = client.CreateCustomReward("		", nil)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
 	require.Nil(t, reward)
 
 	reward, err = client.CreateCustomReward("1234", nil)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, custom reward can't be nil"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, custom reward can't be nil"})
 	require.Nil(t, reward)
 }
 
@@ -222,17 +223,17 @@ func TestClient_CreateClipReturnsError(t *testing.T) {
 	client := Client{}
 
 	editURL, id, err := client.CreateClip("", false)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
 	require.Zero(t, editURL)
 	require.Zero(t, id)
 
 	editURL, id, err = client.CreateClip("    ", false)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
 	require.Zero(t, editURL)
 	require.Zero(t, id)
 
 	editURL, id, err = client.CreateClip("		", false)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
 	require.Zero(t, editURL)
 	require.Zero(t, id)
 }
@@ -316,7 +317,7 @@ func TestClient_CreatePollReturnsError(t *testing.T) {
 	client := Client{}
 
 	poll, err := client.CreatePoll(nil)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, poll can't be nil"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, poll can't be nil"})
 	require.Nil(t, poll)
 }
 
@@ -408,7 +409,7 @@ func TestClient_CreatePredictionReturnsError(t *testing.T) {
 	client := Client{}
 
 	predictions, err := client.CreatePrediction(nil)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, prediction can't be nil"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, prediction can't be nil"})
 	require.Nil(t, predictions)
 }
 
@@ -487,19 +488,19 @@ func TestClient_CreateChannelStreamScheduleSegmentReturnsError(t *testing.T) {
 	client := Client{}
 
 	schedule, err := client.CreateChannelStreamScheduleSegment("", nil)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
 	require.Nil(t, schedule)
 
 	schedule, err = client.CreateChannelStreamScheduleSegment("    ", nil)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
 	require.Nil(t, schedule)
 
 	schedule, err = client.CreateChannelStreamScheduleSegment("	", nil)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
 	require.Nil(t, schedule)
 
 	schedule, err = client.CreateChannelStreamScheduleSegment("1234", nil)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, segment can't be nil"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, segment can't be nil"})
 	require.Nil(t, schedule)
 }
 
@@ -541,27 +542,27 @@ func TestClient_CreateUserFollowsReturnsError(t *testing.T) {
 	client := Client{}
 
 	followed, err := client.CreateUserFollows("", "123", false)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, from id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, from id can't be blank"})
 	require.False(t, followed)
 
 	followed, err = client.CreateUserFollows("    ", "123", false)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, from id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, from id can't be blank"})
 	require.False(t, followed)
 
 	followed, err = client.CreateUserFollows("	", "123", false)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, from id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, from id can't be blank"})
 	require.False(t, followed)
 
 	followed, err = client.CreateUserFollows("123", "", false)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, to id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, to id can't be blank"})
 	require.False(t, followed)
 
 	followed, err = client.CreateUserFollows("123", "    ", false)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, to id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, to id can't be blank"})
 	require.False(t, followed)
 
 	followed, err = client.CreateUserFollows("123", "	", false)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, to id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, to id can't be blank"})
 	require.False(t, followed)
 }
 
@@ -609,18 +610,18 @@ func TestClient_StartCommercialReturnsError(t *testing.T) {
 	client := Client{}
 
 	commercial, err := client.StartCommercial("", 0)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, from id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, from id can't be blank"})
 	require.Nil(t, commercial)
 
 	commercial, err = client.StartCommercial("    ", 0)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, from id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, from id can't be blank"})
 	require.Nil(t, commercial)
 
 	commercial, err = client.StartCommercial("		", 0)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, from id can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, from id can't be blank"})
 	require.Nil(t, commercial)
 
 	commercial, err = client.StartCommercial("123", 0)
-	require.Equal(t, err, BadRequestError{"invalid request, valid length values are 30, 60, 90, 120, 150, 180"})
+	require.Equal(t, err, gotau.BadRequestError{"invalid request, valid length values are 30, 60, 90, 120, 150, 180"})
 	require.Nil(t, commercial)
 }

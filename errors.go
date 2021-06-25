@@ -2,40 +2,30 @@ package gotau
 
 // AuthorizationError represents an Unauthorized response from Twitch
 type AuthorizationError struct {
-	err string
+	Err string
 }
 
 func (a AuthorizationError) Error() string {
-	return a.err
+	return a.Err
 }
 
 // BadRequestError represents bad inputs from an application trying to make an API request to
 //twitch based on their documented limitations
 type BadRequestError struct {
-	err string
+	Err string
 }
 
 func (b BadRequestError) Error() string {
-	return b.err
+	return b.Err
 }
 
 // GenericError represents a non-specific error, sorta a catch all.
 type GenericError struct {
-	err  string
-	body []byte
-	code int
+	Err  string
+	Body []byte
+	Code int
 }
 
 func (g GenericError) Error() string {
-	return g.err
-}
-
-// Body returns the body of a failed request
-func (g GenericError) Body() string {
-	return string(g.body)
-}
-
-// StatusCode returns the status code returned by twitch
-func (g GenericError) StatusCode() int {
-	return g.code
+	return g.Err
 }

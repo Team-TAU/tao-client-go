@@ -3,6 +3,7 @@ package helix
 import (
 	"encoding/json"
 	"fmt"
+	gotau "github.com/Team-TAU/tau-client-go"
 	"github.com/stretchr/testify/require"
 	"io/ioutil"
 	"net"
@@ -35,7 +36,7 @@ func TestClient_PutRequestReturnsAuthError(t *testing.T) {
 	require.NotNil(t, client)
 
 	shouldBeNil, err := client.PutRequest("channels", nil, nil)
-	require.ErrorIs(t, err, AuthorizationError{})
+	require.ErrorIs(t, err, gotau.AuthorizationError{})
 	require.Nil(t, shouldBeNil)
 }
 
@@ -61,7 +62,7 @@ func TestClient_PutRequestReturnsGenericError(t *testing.T) {
 
 	shouldBeNil, err := client.PutRequest("channels", nil, nil)
 	require.Error(t, err)
-	require.IsType(t, GenericError{}, err)
+	require.IsType(t, gotau.GenericError{}, err)
 	require.Nil(t, shouldBeNil)
 }
 
@@ -138,19 +139,19 @@ func TestClient_ReplaceStreamTagsReturnsError(t *testing.T) {
 	client := Client{}
 
 	replaced, err := client.ReplaceStreamTags("", nil)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
 	require.False(t, replaced)
 
 	replaced, err = client.ReplaceStreamTags("    ", nil)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
 	require.False(t, replaced)
 
 	replaced, err = client.ReplaceStreamTags("		", nil)
-	require.ErrorIs(t, err, BadRequestError{"invalid request, broadcast can't be blank"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, broadcast can't be blank"})
 	require.False(t, replaced)
 
 	replaced, err = client.ReplaceStreamTags("123", make([]string, 6))
-	require.ErrorIs(t, err, BadRequestError{"invalid request, maximum of 5 tags can be set"})
+	require.ErrorIs(t, err, gotau.BadRequestError{"invalid request, maximum of 5 tags can be set"})
 	require.False(t, replaced)
 }
 

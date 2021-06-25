@@ -57,7 +57,7 @@ func (c *Client) FollowStreamerOnTau(username string) (*TAUStreamer, error) {
 	username = strings.TrimSpace(username)
 	if username == "" {
 		return nil, BadRequestError{
-			err: "invalid request, username can't be blank",
+			Err: "invalid request, username can't be blank",
 		}
 	}
 
@@ -97,7 +97,7 @@ func (c *Client) GetStreamsForStreamer(streamerID string, maximumStreams int) ([
 	streamerID = strings.TrimSpace(streamerID)
 	if streamerID == "" {
 		return nil, BadRequestError{
-			err: "invalid request, streamer id can't be blank",
+			Err: "invalid request, streamer id can't be blank",
 		}
 	}
 

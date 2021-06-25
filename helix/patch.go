@@ -3,6 +3,7 @@ package helix
 import (
 	"encoding/json"
 	"fmt"
+	gotau "github.com/Team-TAU/tau-client-go"
 	"strings"
 	"time"
 )
@@ -21,7 +22,7 @@ func (c *Client) PatchRequest(endpoint string, params map[string][]string, body 
 func (c *Client) ModifyChannelInformation(broadcasterID string, gameID, language, title *string, delay *int) (bool, error) {
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
-		return false, BadRequestError{
+		return false, gotau.BadRequestError{
 			"invalid request, broadcast can't be blank",
 		}
 	}
@@ -45,7 +46,7 @@ func (c *Client) ModifyChannelInformation(broadcasterID string, gameID, language
 	}
 
 	if len(bodyObject) == 0 {
-		return false, BadRequestError{
+		return false, gotau.BadRequestError{
 			"invalid request, at least one parameter must be provided of gameID, language, title, and delay",
 		}
 	}
@@ -64,17 +65,17 @@ func (c *Client) UpdateCustomReward(broadcasterID string, ID string, change *Cus
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	ID = strings.TrimSpace(ID)
 	if broadcasterID == "" {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, broadcast can't be blank",
 		}
 	}
 	if ID == "" {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, ID can't be blank",
 		}
 	}
 	if change == nil {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, change can't be nil",
 		}
 	}
@@ -107,26 +108,26 @@ func (c *Client) UpdateRedemptionStatus(broadcasterID, rewardID string, redempti
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	rewardID = strings.TrimSpace(rewardID)
 	if broadcasterID == "" {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, broadcast can't be blank",
 		}
 	}
 	if rewardID == "" {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, rewardID can't be blank",
 		}
 	}
 	if len(redemptionIDs) == 0 {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, redemptionIDs can't be empty or nil",
 		}
 	} else if len(redemptionIDs) > 50 {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			fmt.Sprintf("invalid request,  maximum of 50 redemptionIDs, but you supplied %d", len(redemptionIDs)),
 		}
 	}
 	if status != "FULFILLED" && status != "CANCELED" {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request,  status can only be one of FULFILLED or CANCELED",
 		}
 	}
@@ -166,17 +167,17 @@ func (c *Client) EndPoll(broadcasterID, pollID, status string) (*Polls, error) {
 	pollID = strings.TrimSpace(pollID)
 	status = strings.TrimSpace(status)
 	if broadcasterID == "" {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, broadcast can't be blank",
 		}
 	}
 	if pollID == "" {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, poll id can't be blank",
 		}
 	}
 	if status != "TERMINATED" && status != "ARCHIVED" {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, status must either be TERMINATED or ARCHIVED",
 		}
 	}
@@ -209,22 +210,22 @@ func (c *Client) EndPrediction(broadcasterID, predictionID, status string, winni
 	predictionID = strings.TrimSpace(predictionID)
 	status = strings.TrimSpace(status)
 	if broadcasterID == "" {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, broadcast can't be blank",
 		}
 	}
 	if predictionID == "" {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, prediction id can't be blank",
 		}
 	}
 	if status != "RESOLVED" && status != "CANCELED" && status != "LOCKED" {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, status must either be RESOLVED, CANCELED, or LOCKED",
 		}
 	}
 	if status == "RESOLVED" && winningOutcome == nil {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, if status RESOLVED, winning outcome must be set",
 		}
 	}
@@ -260,23 +261,23 @@ func (c *Client) UpdateChannelStreamSchedule(broadcasterID string, vacationEnabl
 	vacationStartTime, vacationEndTime *time.Time, timezone *string) (bool, error) {
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
-		return false, BadRequestError{
+		return false, gotau.BadRequestError{
 			"invalid request, broadcast can't be blank",
 		}
 	}
 	if vacationEnabled != nil && *vacationEnabled {
 		if vacationStartTime == nil {
-			return false, BadRequestError{
+			return false, gotau.BadRequestError{
 				"invalid request, if vacationEnabled, vacationStartTime must be specified",
 			}
 		}
 		if vacationEndTime == nil {
-			return false, BadRequestError{
+			return false, gotau.BadRequestError{
 				"invalid request, if vacationEnabled, vacationEndTime must be specified",
 			}
 		}
 		if timezone == nil {
-			return false, BadRequestError{
+			return false, gotau.BadRequestError{
 				"invalid request, if vacationEnabled, timezone must be specified",
 			}
 		}
@@ -306,17 +307,17 @@ func (c *Client) UpdateChannelStreamScheduleSegment(broadcasterID, segmentID str
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	segmentID = strings.TrimSpace(segmentID)
 	if broadcasterID == "" {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, broadcast can't be blank",
 		}
 	}
 	if segmentID == "" {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, segment id can't be blank",
 		}
 	}
 	if update == nil {
-		return nil, BadRequestError{
+		return nil, gotau.BadRequestError{
 			"invalid request, update can't be nil",
 		}
 	}

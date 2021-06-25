@@ -72,9 +72,9 @@ func (c *Client) apiRequest(endpoint string, params map[string][]string, body []
 	} else {
 		body, _ := ioutil.ReadAll(response.Body)
 		err = GenericError{
-			err:  fmt.Sprintf("response code %d: %s", response.StatusCode, body),
-			body: body,
-			code: response.StatusCode,
+			Err:  fmt.Sprintf("response Code %d: %s", response.StatusCode, body),
+			Body: body,
+			Code: response.StatusCode,
 		}
 		return nil, err
 	}
