@@ -69,13 +69,12 @@ func (c *Client) apiRequest(endpoint string, params map[string][]string, body []
 	}
 	if response.StatusCode == 401 {
 		return nil, AuthorizationError{}
-	} else {
-		body, _ := ioutil.ReadAll(response.Body)
-		err = GenericError{
-			Err:  fmt.Sprintf("response Code %d: %s", response.StatusCode, body),
-			Body: body,
-			Code: response.StatusCode,
-		}
-		return nil, err
 	}
+	body, _ = ioutil.ReadAll(response.Body)
+	err = GenericError{
+		Err:  fmt.Sprintf("response Code %d: %s", response.StatusCode, body),
+		Body: body,
+		Code: response.StatusCode,
+	}
+	return nil, err
 }
