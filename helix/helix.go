@@ -4,6 +4,7 @@ package helix
 import (
 	"bytes"
 	"fmt"
+	gotau "github.com/Team-TAU/tau-client-go"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -66,7 +67,7 @@ func (c *Client) helixRequest(endpoint string, params map[string][]string, body 
 		return body, err
 	}
 	if response.StatusCode == 401 {
-		return nil, AuthorizationError{}
+		return nil, gotau.AuthorizationError{}
 	} else if response.StatusCode == 429 {
 		resetEpoch := response.Header.Get("Ratelimit-Reset")
 		rlErr := RateLimitError{
@@ -83,10 +84,10 @@ func (c *Client) helixRequest(endpoint string, params map[string][]string, body 
 		return nil, rlErr
 	} else {
 		body, _ := ioutil.ReadAll(response.Body)
-		err = GenericError{
-			err:  fmt.Sprintf("response code %d: %s", response.StatusCode, body),
-			body: body,
-			code: response.StatusCode,
+		err = gotau.GenericError{
+			Err:  fmt.Sprintf("response code %d: %s", response.StatusCode, body),
+			Body: body,
+			Code: response.StatusCode,
 		}
 		return nil, err
 	}

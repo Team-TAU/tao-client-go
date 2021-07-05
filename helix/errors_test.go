@@ -3,40 +3,24 @@ package helix
 import (
 	"github.com/stretchr/testify/require"
 	"testing"
+	"time"
 )
-
-func TestAuthorizationError_Error(t *testing.T) {
-	err := AuthorizationError{
-		err: "User unauthorized",
-	}
-
-	require.Error(t, err)
-	require.Equal(t, "User unauthorized", err.Error())
-}
-
-func TestBadRequestError_Error(t *testing.T) {
-	err := BadRequestError{
-		err: "Malformed request",
-	}
-
-	require.Error(t, err)
-	require.Equal(t, "Malformed request", err.Error())
-}
-
-func TestGenericError_Error(t *testing.T) {
-	err := GenericError{
-		err: "Generic Error",
-	}
-
-	require.Error(t, err)
-	require.Equal(t, "Generic Error", err.Error())
-}
 
 func TestRateLimitError_Error(t *testing.T) {
 	err := RateLimitError{
-		err: "Rate Limit Error",
+		err: "this is a test",
+	}
+	require.Error(t, err)
+	require.Equal(t, "this is a test", err.Error())
+}
+
+func TestRateLimitError_ResetTime(t *testing.T) {
+	now := time.Now()
+	err := RateLimitError{
+		err:   "this is a test",
+		reset: &now,
 	}
 
 	require.Error(t, err)
-	require.Equal(t, "Rate Limit Error", err.Error())
+	require.Equal(t, now, *err.ResetTime())
 }

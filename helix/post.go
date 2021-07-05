@@ -3,6 +3,7 @@ package helix
 import (
 	"encoding/json"
 	"fmt"
+	gotau "github.com/Team-TAU/tau-client-go"
 	"strings"
 )
 
@@ -16,13 +17,13 @@ func (c *Client) PostRequest(endpoint string, params map[string][]string, body [
 func (c *Client) CreateCustomReward(broadcasterID string, customReward *CustomRewardsUpdate) (*CustomRewards, error) {
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
-		return nil, BadRequestError{
-			"invalid request, broadcast can't be blank",
+		return nil, gotau.BadRequestError{
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if customReward == nil {
-		return nil, BadRequestError{
-			"invalid request, custom reward can't be nil",
+		return nil, gotau.BadRequestError{
+			Err: "invalid request, custom reward can't be nil",
 		}
 	}
 	params := map[string][]string{
@@ -57,8 +58,8 @@ func (c *Client) CreateClip(broadcasterID string, hasDelay bool) (string, string
 	}
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
-		return "", "", BadRequestError{
-			"invalid request, broadcast can't be blank",
+		return "", "", gotau.BadRequestError{
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 
@@ -89,8 +90,8 @@ func (c *Client) CreateClip(broadcasterID string, hasDelay bool) (string, string
 // CreatePoll can be used to create a poll on your channel, see https://dev.twitch.tv/docs/api/reference#create-poll
 func (c *Client) CreatePoll(poll *CreatePoll) (*Polls, error) {
 	if poll == nil {
-		return nil, BadRequestError{
-			"invalid request, poll can't be nil",
+		return nil, gotau.BadRequestError{
+			Err: "invalid request, poll can't be nil",
 		}
 	}
 
@@ -117,8 +118,8 @@ func (c *Client) CreatePoll(poll *CreatePoll) (*Polls, error) {
 // See https://dev.twitch.tv/docs/api/reference#create-prediction
 func (c *Client) CreatePrediction(prediction *CreatePrediction) (*Predictions, error) {
 	if prediction == nil {
-		return nil, BadRequestError{
-			"invalid request, prediction can't be nil",
+		return nil, gotau.BadRequestError{
+			Err: "invalid request, prediction can't be nil",
 		}
 	}
 
@@ -146,13 +147,13 @@ func (c *Client) CreatePrediction(prediction *CreatePrediction) (*Predictions, e
 func (c *Client) CreateChannelStreamScheduleSegment(broadcasterID string, segment *StreamScheduleSegmentUpdate) (*ChannelStreamSchedule, error) {
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
-		return nil, BadRequestError{
-			"invalid request, broadcast can't be blank",
+		return nil, gotau.BadRequestError{
+			Err: "invalid request, broadcast can't be blank",
 		}
 	}
 	if segment == nil {
-		return nil, BadRequestError{
-			"invalid request, segment can't be nil",
+		return nil, gotau.BadRequestError{
+			Err: "invalid request, segment can't be nil",
 		}
 	}
 
@@ -185,13 +186,13 @@ func (c *Client) CreateUserFollows(fromID, toID string, allowNotifications bool)
 	toID = strings.TrimSpace(toID)
 
 	if fromID == "" {
-		return false, BadRequestError{
-			"invalid request, from id can't be blank",
+		return false, gotau.BadRequestError{
+			Err: "invalid request, from id can't be blank",
 		}
 	}
 	if toID == "" {
-		return false, BadRequestError{
-			"invalid request, to id can't be blank",
+		return false, gotau.BadRequestError{
+			Err: "invalid request, to id can't be blank",
 		}
 	}
 
@@ -224,8 +225,8 @@ func (c *Client) StartCommercial(broadcasterID string, length int) (*Commercial,
 	}
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	if broadcasterID == "" {
-		return nil, BadRequestError{
-			"invalid request, from id can't be blank",
+		return nil, gotau.BadRequestError{
+			Err: "invalid request, from id can't be blank",
 		}
 	}
 
@@ -247,8 +248,8 @@ func (c *Client) StartCommercial(broadcasterID string, length int) (*Commercial,
 	case 180:
 		commercialData.Length = length
 	default:
-		return nil, BadRequestError{
-			"invalid request, valid length values are 30, 60, 90, 120, 150, 180",
+		return nil, gotau.BadRequestError{
+			Err: "invalid request, valid length values are 30, 60, 90, 120, 150, 180",
 		}
 	}
 

@@ -122,7 +122,12 @@ func GetAuthToken(username, password, hostname string, port int, hasSSL bool) (s
 	}
 	if resp.StatusCode != http.StatusOK {
 		data, _ := ioutil.ReadAll(resp.Body)
-		return "", fmt.Errorf("expected 200 status code but got %d, response body %s", resp.StatusCode, string(data))
+		err := GenericError{
+			Err:  fmt.Sprintf("expected 200 status code but got %d", resp.StatusCode),
+			Body: data,
+			Code: resp.StatusCode,
+		}
+		return "", err
 	}
 
 	type tmp struct {

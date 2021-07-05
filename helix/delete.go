@@ -2,6 +2,7 @@ package helix
 
 import (
 	"fmt"
+	gotau "github.com/Team-TAU/tau-client-go"
 	"strings"
 )
 
@@ -19,13 +20,13 @@ func (c *Client) DeleteCustomReward(broadcasterID, ID string) (bool, error) {
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	ID = strings.TrimSpace(ID)
 	if broadcasterID == "" {
-		return false, BadRequestError{
-			"invalid request, broadcaster can't be blank",
+		return false, gotau.BadRequestError{
+			Err: "invalid request, broadcaster can't be blank",
 		}
 	}
 	if ID == "" {
-		return false, BadRequestError{
-			"invalid request, ID can't be blank",
+		return false, gotau.BadRequestError{
+			Err: "invalid request, ID can't be blank",
 		}
 	}
 
@@ -41,8 +42,8 @@ func (c *Client) DeleteCustomReward(broadcasterID, ID string) (bool, error) {
 func (c *Client) DeleteEventSubSubscription(ID string) (bool, error) {
 	ID = strings.TrimSpace(ID)
 	if ID == "" {
-		return false, BadRequestError{
-			"invalid request, ID can't be blank",
+		return false, gotau.BadRequestError{
+			Err: "invalid request, ID can't be blank",
 		}
 	}
 
@@ -59,13 +60,13 @@ func (c *Client) DeleteUserFollows(fromID, toID string) (bool, error) {
 	toID = strings.TrimSpace(toID)
 
 	if fromID == "" {
-		return false, BadRequestError{
-			"invalid request, fromID can't be blank",
+		return false, gotau.BadRequestError{
+			Err: "invalid request, fromID can't be blank",
 		}
 	}
 	if toID == "" {
-		return false, BadRequestError{
-			"invalid request, toID can't be blank",
+		return false, gotau.BadRequestError{
+			Err: "invalid request, toID can't be blank",
 		}
 	}
 
@@ -81,8 +82,8 @@ func (c *Client) DeleteUserFollows(fromID, toID string) (bool, error) {
 func (c *Client) UnblockUser(userID string) (bool, error) {
 	userID = strings.TrimSpace(userID)
 	if userID == "" {
-		return false, BadRequestError{
-			"invalid request, userID can't be blank",
+		return false, gotau.BadRequestError{
+			Err: "invalid request, userID can't be blank",
 		}
 	}
 
@@ -96,13 +97,13 @@ func (c *Client) UnblockUser(userID string) (bool, error) {
 // DeleteVideos makes an api call to https://dev.twitch.tv/docs/api/reference#delete-videos, and formats the data.
 func (c *Client) DeleteVideos(IDs []string) (bool, error) {
 	if len(IDs) == 0 {
-		return false, BadRequestError{
-			"invalid request, IDs can't be empty",
+		return false, gotau.BadRequestError{
+			Err: "invalid request, IDs can't be empty",
 		}
 	}
 	if len(IDs) > 5 {
-		return false, BadRequestError{
-			fmt.Sprintf("invalid request, maximum number of IDs is 5 but you supplied %d", len(IDs)),
+		return false, gotau.BadRequestError{
+			Err: fmt.Sprintf("invalid request, maximum number of IDs is 5 but you supplied %d", len(IDs)),
 		}
 	}
 
@@ -121,13 +122,13 @@ func (c *Client) DeleteChannelStreamScheduleSegment(broadcasterID, ID string) (b
 	broadcasterID = strings.TrimSpace(broadcasterID)
 	ID = strings.TrimSpace(ID)
 	if broadcasterID == "" {
-		return false, BadRequestError{
-			"invalid request, broadcaster can't be blank",
+		return false, gotau.BadRequestError{
+			Err: "invalid request, broadcaster can't be blank",
 		}
 	}
 	if ID == "" {
-		return false, BadRequestError{
-			"invalid request, ID can't be blank",
+		return false, gotau.BadRequestError{
+			Err: "invalid request, ID can't be blank",
 		}
 	}
 
