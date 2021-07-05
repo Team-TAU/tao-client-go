@@ -110,14 +110,9 @@ func (c *Client) GetStreamsForStreamer(streamerID string, maximumStreams int) ([
 	}
 
 	count := 0
-	i := 1
-	params := map[string][]string{
-		"page": {fmt.Sprintf("%d", i)},
-	}
 
 	for count <= maximumStreams {
-		params["page"] = []string{fmt.Sprintf("%d", i)}
-		body, err := c.apiRequest(url, params, nil, "GET")
+		body, err := c.apiRequest(url, nil, nil, "GET")
 		if err != nil {
 			return nil, err
 		}
@@ -132,10 +127,11 @@ func (c *Client) GetStreamsForStreamer(streamerID string, maximumStreams int) ([
 		// no data left so abort early whether or not we've got enough data
 		if tmpData.Next == nil {
 			break
+		} else {
+			url = *tmpData.Next
 		}
 
 		count += len(tmpData.Streams)
-		i++
 	}
 
 	return results, nil
