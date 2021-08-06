@@ -2,10 +2,10 @@ package gotau
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -18,8 +18,8 @@ type Time struct {
 func (t *Time) UnmarshalJSON(b []byte) error {
 	primaryLayout := "2006-01-02T15:04:05.999999999-07:00"
 	secondaryLayout := "2006-01-02T15:04:05.999999999-0700"
-	timeAsString := strings.TrimSpace(string(b))
-	timeAsString = strings.Trim(timeAsString, "\"")
+	var timeAsString string
+	err := json.Unmarshal(b, &timeAsString)
 	timestamp, err := time.Parse(primaryLayout, timeAsString)
 	if err != nil {
 		timestamp, err = time.Parse(secondaryLayout, timeAsString)
